@@ -3,616 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADRU TURNS 22</title>
+    <title>CHACHOS' BIRTHDAY SYMPHONY | Royal Sapphire Concert</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- GSAP & Plugins -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Lenis for Smooth Scrolling -->
+    <!-- Lenis Smooth Scroll -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <!-- Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --magic-gold: #ffd700;
-            --magic-purple: #4b0082;
-            --magic-glow: 0 0 15px rgba(255, 215, 0, 0.6);
-        }
-
-        /* Lenis Smooth Scroll Core Styles */
-        html.lenis { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto; }
-        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-        .lenis.lenis-stopped { overflow: hidden; }
-
-        body {
-            background-color: #050505;
-            color: white;
-            font-family: 'Quicksand', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        h1, h2, h3, .cinzel { font-family: 'Cinzel Decorative', cursive; }
-
-        .parallax-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 160vh; 
-            background-size: cover; background-position: center bottom;
-            pointer-events: none; will-change: transform; transform: translate3d(0,0,0);
-            backface-visibility: hidden; -webkit-backface-visibility: hidden;
-        }
-
-        .glow-text { text-shadow: var(--magic-glow); }
-
-        /* Map UI Styling */
-        .map-container { 
-            background-image: radial-gradient(circle at center, #1a0a2a 0%, #050505 100%); 
-            min-height: 150vh; 
-            position: relative; 
-            z-index: 50; 
-            padding-bottom: 200px;
-        }
-
-        #map-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .map-node {
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 280px;
-        }
-        
-        .map-node:hover { transform: scale(1.05) translateY(-5px) !important; }
-        .node-glow { filter: drop-shadow(var(--magic-glow)); }
-        .locked { filter: grayscale(1) brightness(0.4); }
-
-        /* Game Grids */
-        .candy-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
-            background: rgba(255, 255, 255, 0.1); padding: 8px; border-radius: 12px;
-            touch-action: none;
-        }
-
-        .candy-item {
-            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; cursor: pointer; transition: transform 0.1s; user-select: none;
-        }
-
-        /* Memory Grid Optimization */
-        .memory-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 100%; max-width: 320px; margin: 0 auto;
-        }
-        .memory-grid-hard { 
-            grid-template-columns: repeat(6, 1fr) !important; max-width: 95vw !important; gap: 3px !important;
-        }
-        .card { aspect-ratio: 1; perspective: 1000px; cursor: pointer; width: 100%; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back {
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-            display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 1.1rem;
-        }
-        .card-front { background: #2a0a4a; border: 1px solid var(--magic-gold); color: gold; font-size: 0.7rem; }
-        .card-back { background: #5e1c9e; transform: rotateY(180deg); }
-        .memory-grid-hard .card-back { font-size: 0.9rem !important; }
-
-        /* Tic Tac Toe UI */
-        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 20px auto; }
-        .ttt-cell {
-            aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 2px solid var(--magic-gold); border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; font-size: 2.5rem; cursor: pointer; transition: all 0.3s;
-        }
-        .ttt-cell.taken { cursor: default; }
-
-        /* Door Animation */
-        .door-container { perspective: 1200px; }
-        .door-leaf { transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: left center; }
-        .door-open .door-leaf { transform: rotateY(-110deg); }
-
-        /* Magic Key */
-        #magic-key { font-size: 80px; filter: drop-shadow(0 0 20px gold); cursor: pointer; }
-
-        .particle { position: absolute; background: white; border-radius: 50%; pointer-events: none; opacity: 0.3; }
-
-        .nav-back-btn { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
-        .nav-back-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--magic-gold); transform: translateY(-2px); }
-
-        .test-mode-banner { background: repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, #000 10px, #000 20px); color: #fff; font-weight: bold; text-align: center; padding: 4px; font-size: 10px; letter-spacing: 1px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999; pointer-events: none; }
-
-        /* Timer UI */
-        .timer-unit { display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.2); padding: 8px; border-radius: 8px; min-width: 60px; }
-        .timer-val { font-size: 1.5rem; font-weight: 800; color: var(--magic-gold); line-height: 1; }
-        .timer-label { font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; margin-top: 4px; }
-    </style>
+    <!-- Fonts: Cinzel Decorative & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="site-locked bg-[#030714] text-slate-100 selection:bg-sky-400 selection:text-slate-950 overflow-x-hidden">
 
-    <div id="test-banner" class="test-mode-banner hidden">TEST MODE ACTIVE - ALL CHALLENGES UNLOCKED</div>
-
-    <!-- STATE: LANDING -->
-    <section id="landing-screen" class="relative h-[200vh] w-full overflow-hidden">
-        <div class="fixed top-6 right-6 z-[100] flex flex-col gap-2">
-            <button onclick="clearAllProgress()" class="bg-white/5 hover:bg-white/10 border border-white/20 text-[10px] px-3 py-1 rounded-full uppercase tracking-tighter cinzel text-gray-400 transition-all">Reset Progress</button>
-        </div>
-
-        <div class="parallax-layer bg-sky z-0" style="background-image: linear-gradient(to bottom, #1a1a2e, #16213e);"></div>
-        <div id="layer-stars" class="parallax-layer z-10 opacity-50"></div>
-        <div id="layer-mountains" class="parallax-layer z-20" style="background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1920') no-repeat bottom; background-size: cover; filter: brightness(0.4) sepia(0.3);"></div>
-        <div id="layer-castle" class="parallax-layer z-30" style="background: url('https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&q=80&w=1920') no-repeat bottom; background-size: cover; filter: drop-shadow(0 0 20px rgba(0,0,0,1));"></div>
-
-        <div class="fixed top-0 left-0 w-full h-screen flex flex-col items-center justify-center z-40 px-4 text-center pointer-events-none">
-            <!-- Secret Trigger: Click this 5 times -->
-            <h1 id="main-title" class="text-5xl md:text-8xl font-black mb-4 glow-text uppercase pointer-events-auto cursor-pointer select-none">5 Days To Magic ✨</h1>
-            <p id="main-subtitle" class="text-xl md:text-2xl opacity-80 tracking-widest cinzel">The journey begins now...</p>
-            <div id="scroll-indicator" class="mt-20 animate-bounce">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-            </div>
+    <section id="password-gate" class="password-gate" aria-labelledby="password-title">
+        <div class="password-card">
+            <span class="password-eyebrow">A LITTLE BIRTHDAY SURPRISE</span>
+            <h1 id="password-title" class="password-title">This celebration is just for you</h1>
+            <p class="password-description">Enter the password to step into your birthday celebration.</p>
+            <form id="password-form" class="password-form">
+                <label class="sr-only" for="site-password">Website password</label>
+                <input
+                    id="site-password"
+                    name="password"
+                    type="password"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="Enter password"
+                    aria-describedby="password-error"
+                    required
+                >
+                <p id="password-error" class="password-error" aria-live="polite"></p>
+                <button type="submit" class="password-submit">Unlock the celebration</button>
+            </form>
         </div>
     </section>
 
-    <!-- STATE: MAP -->
-    <section id="map-screen" class="map-container py-20 px-4 relative opacity-0">
-        <svg id="map-svg"><defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="gold" /></marker></defs></svg>
-        <button onclick="scrollToLanding()" class="nav-back-btn fixed top-6 left-6 z-[60] px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold cinzel">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>Back to Castle
+    <!-- Audio Player Element (Plays user's tum_hi_ho.mpeg) -->
+    <audio id="bg-audio" loop preload="auto" src="tum_hi_ho.mpeg">
+        <source src="tum_hi_ho.mpeg" type="audio/mpeg">
+        <source src="audio.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Starlight Celestial Particles & Spotlight Beams -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="spotlight spotlight-sapphire"></div>
+        <div class="spotlight spotlight-silver"></div>
+        <div id="stars-layer" class="absolute inset-0"></div>
+        <div id="notes-container" class="absolute inset-0"></div>
+    </div>
+
+    <!-- FLOATING SAPPHIRE VINYL PLAYER WIDGET -->
+    <div id="music-player-widget" class="fixed top-5 right-5 z-[150] flex items-center gap-3 bg-[#08122c]/80 backdrop-blur-xl border border-sky-400/30 rounded-full pl-2 pr-4 py-2 shadow-[0_0_30px_rgba(56,189,248,0.25)] transition-all duration-300 hover:border-sky-300">
+        <!-- Vinyl Record Disc -->
+        <div id="vinyl-disc" class="relative w-11 h-11 rounded-full overflow-hidden border-2 border-sky-300/80 shadow-md cursor-pointer flex-shrink-0 group">
+            <img src="images/WhatsApp%20Image%202026-10-27%20at%2011.43.57%20PM.jpeg" alt="Chachos' childhood photo" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-all flex items-center justify-center">
+                <div class="w-3 h-3 rounded-full bg-sky-300 border border-slate-900 shadow"></div>
+            </div>
+        </div>
+
+        <!-- Track Info & Visualizer -->
+        <div class="flex flex-col min-w-[140px] max-w-[180px]">
+            <span class="text-[10px] text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span id="player-status-text">Playing</span>
+            </span>
+            <span id="track-title" class="text-xs font-semibold truncate text-slate-200">Tum Hi Ho (Instrumental)</span>
+        </div>
+
+        <!-- Equalizer Bars -->
+        <div id="equalizer-bars" class="flex items-end gap-[3px] h-5 px-1">
+            <span class="eq-bar h-2"></span>
+            <span class="eq-bar h-4"></span>
+            <span class="eq-bar h-3"></span>
+            <span class="eq-bar h-5"></span>
+            <span class="eq-bar h-2"></span>
+        </div>
+
+        <!-- Play/Pause Button -->
+        <button id="play-pause-btn" class="w-9 h-9 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 text-slate-950 font-bold flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-md ml-1" title="Play / Pause Song">
+            <svg id="play-icon" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pause-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
         </button>
-        <div class="max-w-4xl mx-auto text-center mb-24"><h2 class="text-4xl font-bold mb-2 glow-text cinzel">The Magic Path</h2><p class="text-amber-500 italic tracking-widest uppercase text-xs">Zig-Zag through the portals of time</p></div>
-        <div id="nodes-container" class="relative max-w-2xl mx-auto flex flex-col gap-32"></div>
+    </div>
+
+    <!-- FULLSCREEN CONCERT OPENING GATE (Instant Play on Click) -->
+    <div id="concert-gate" class="fixed inset-0 z-[500] bg-gradient-to-b from-[#030714] via-[#071333] to-[#04091a] flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700 cursor-pointer" onclick="enterConcert()">
+        <!-- Glowing Album Art -->
+        <div class="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full p-1 bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-[0_0_90px_rgba(56,189,248,0.5)] mb-8 animate-pulse">
+            <img src="images/WhatsApp%20Image%202026-10-27%20at%2011.43.57%20PM.jpeg" alt="Chachos' childhood photo" class="w-full h-full object-cover rounded-full">
+        </div>
+
+        <span class="text-xs text-sky-300 uppercase tracking-[0.35em] font-bold mb-3 cinzel">A CELEBRATION MADE FOR YOU</span>
+        <h1 class="text-3xl sm:text-6xl font-black cinzel glow-silver mb-3 uppercase tracking-wider">
+            A SYMPHONY FOR CHACHOS
+        </h1>
+        <p class="text-sm sm:text-base text-slate-300 max-w-lg font-light mb-8">
+            For the songs you share, the joy you bring, and all the wonderful memories still to come.<br>
+            <span class="text-xs text-sky-400 font-mono-music">Playing: Tum Hi Ho (Instrumental)</span>
+        </p>
+
+        <button class="px-10 py-4 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 text-slate-950 font-black text-sm sm:text-base cinzel uppercase tracking-widest rounded-full shadow-[0_0_50px_rgba(56,189,248,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+            <svg class="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <span>STEP INTO YOUR CELEBRATION</span>
+        </button>
+        <span class="text-[11px] text-slate-500 mt-4 tracking-widest uppercase">Tap anywhere or scroll to begin</span>
+    </div>
+
+    <!-- HERO / LANDING SECTION (Normal flow - Eliminates all scroll overlap issues!) -->
+    <section id="landing-screen" class="relative min-h-screen w-full flex flex-col items-center justify-center text-center px-4 py-24 overflow-hidden z-10">
+        <!-- Cosmic Sapphire Background Layers -->
+        <div class="absolute inset-0 z-0 pointer-events-none" style="background: radial-gradient(circle at 50% 35%, #0c1e4d 0%, #06112e 55%, #030714 100%);"></div>
+        <div id="layer-stars" class="absolute inset-0 z-10 opacity-70 pointer-events-none"></div>
+        <div id="layer-nebula" class="absolute inset-0 z-20 pointer-events-none" style="background: radial-gradient(ellipse at 50% 80%, rgba(56,189,248,0.18) 0%, transparent 65%);"></div>
+
+        <!-- Stage Spotlight Header -->
+        <div class="relative z-30 flex flex-col items-center justify-center max-w-4xl mx-auto">
+            <figure class="hero-photo-frame">
+                <video
+                    class="hero-photo"
+                    src="images/WhatsApp%20Video%202026-10-27%20at%2011.22.53%20PM%20(1).mp4"
+                    poster="images/file_0000000035e88210a2cf1deaaf00f117.png"
+                    aria-label="Birthday video of Chachos"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    controls
+                ></video>
+            </figure>
+
+            <p class="birthday-greeting">Today, we celebrate you</p>
+            <h1 id="main-title" class="text-5xl sm:text-7xl md:text-8xl font-black mb-4 glow-silver cinzel cursor-pointer select-none leading-tight tracking-tight hover:scale-105 transition-transform">
+                CHACHOS
+            </h1>
+
+            <p id="main-subtitle" class="text-base sm:text-xl md:text-2xl text-slate-300 max-w-2xl font-light tracking-wide px-4">
+                Your voice brings a little magic to every song, and your kindness makes the moments around you brighter. Today, the music and all the love are for you.
+            </p>
+
+            <div id="scroll-indicator" class="mt-12 animate-bounce opacity-70">
+                <span class="text-xs text-sky-400 tracking-widest uppercase block mb-1">Explore your birthday celebration</span>
+                <svg class="w-6 h-6 text-sky-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </div>
+        </div>
     </section>
 
-    <!-- STATE: TIMER POPUP MODAL -->
-    <div id="timer-overlay" class="hidden fixed inset-0 z-[400] bg-black/80 flex items-center justify-center p-6 text-center backdrop-blur-md">
-        <div class="bg-gradient-to-b from-[#2a1a4a] to-[#0a0510] border-2 border-amber-500/50 p-8 rounded-3xl max-w-sm w-full relative shadow-[0_0_50px_rgba(255,215,0,0.3)]">
-            <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center text-3xl shadow-xl">⏳</div>
-            <h4 class="cinzel text-xl mb-2 text-white">Portal is Sealed</h4>
-            <p id="timer-target-name" class="text-xs text-amber-400 uppercase tracking-widest mb-6 font-bold">Unlocking In:</p>
-            
-            <div class="flex justify-center gap-2 mb-8">
-                <div class="timer-unit"><span class="timer-val" id="t-days">00</span><span class="timer-label">Days</span></div>
-                <div class="timer-unit"><span class="timer-val" id="t-hours">00</span><span class="timer-label">Hrs</span></div>
-                <div class="timer-unit"><span class="timer-val" id="t-mins">00</span><span class="timer-label">Min</span></div>
-                <div class="timer-unit"><span class="timer-val" id="t-secs">00</span><span class="timer-label">Sec</span></div>
-            </div>
 
-            <p class="text-xs text-gray-400 italic mb-6">Patience is the key to true wonder.</p>
-            <button onclick="closeTimer()" class="w-full py-3 bg-white/5 border border-white/10 rounded-xl font-bold hover:bg-white/10 transition cinzel text-sm">Return to Map</button>
+    <!-- PERSONAL MESSAGE MODAL (To Chachos from ~Pria_u) -->
+    <div id="msg-overlay" class="hidden fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-gradient-to-b from-[#091b45] to-[#040a1c] border-2 border-sky-400/50 p-8 rounded-3xl max-w-lg w-full relative shadow-[0_0_60px_rgba(56,189,248,0.3)]">
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-gradient-to-tr from-sky-400 to-blue-600 rounded-full flex items-center justify-center text-4xl shadow-xl border-2 border-slate-900">
+                ðŸ’Œ
+            </div>
+            <h4 class="cinzel text-2xl font-bold text-sky-300 mt-4 mb-4 text-center">To Chachos, Our Favorite Vocalist</h4>
+            <div id="personal-msg-text" class="text-sm sm:text-base text-slate-200 leading-relaxed max-h-[55vh] overflow-y-auto px-2 space-y-4 font-light">
+                <p>
+                    Stepping into 22 â€” not just another year, but another milestone of your journey! Through every song, random conversation, and simple smile, your rare calmness and stunning voice have always stood out.
+                </p>
+                <p>
+                    Whenever you sing, you bring so much soul, emotion, and magic into the room. Your music is truly a gift to everyone around you.
+                </p>
+                <p>
+                    22 is your time â€” for bigger stages, soaring melodies, boundless growth, and every dream finding its path straight to you. Stay exactly who you areâ€¦ thatâ€™s your power. Today, the spotlight is all yours.
+                </p>
+                <p class="font-bold text-sky-300 text-lg">
+                    Once again, Happy Birthday, Chachos! âœ¨â™¥ï¸ðŸ«‚â¤ï¸â€ðŸ”¥
+                </p>
+                <span class="text-right block text-sky-400 font-bold cinzel text-sm">~ Pria_u</span>
+            </div>
+            <button onclick="closePersonalMessage()" class="w-full mt-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold cinzel text-xs uppercase tracking-wider text-slate-200 transition">
+                Close Letter
+            </button>
         </div>
     </div>
 
-    <!-- STATE: GAME VIEW -->
-    <section id="game-screen" class="hidden fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center p-4 overflow-y-auto">
-        <button onclick="hideGame()" class="absolute top-6 right-6 text-white text-xl nav-back-btn px-4 py-2 rounded-full flex items-center gap-2"><span>&times;</span> Exit to Map</button>
-        <div id="game-content" class="w-full max-w-2xl mt-12 mb-10 flex flex-col items-center"></div>
-    </section>
+    <section id="birthday-puzzle" class="relative z-20 max-w-5xl mx-auto px-4 py-16">
+        <div id="birthday-challenge-intro" class="mx-auto max-w-xl rounded-3xl border border-sky-400/30 bg-[#071330]/80 px-6 py-10 text-center shadow-[0_0_40px_rgba(56,189,248,0.18)] sm:px-10">
+            <span class="text-xs text-sky-400 uppercase tracking-[0.35em] font-bold block mb-3 cinzel">A LITTLE SURPRISE</span>
+            <h2 class="text-3xl sm:text-5xl font-black cinzel glow-silver">A Birthday Challenge for You</h2>
+            <p class="text-slate-300 text-sm max-w-md mx-auto mt-4">
+                Here's a small birthday challenge for you. Ready to piece together a special memory?
+            </p>
+            <button id="accept-birthday-challenge" type="button" class="mt-7 min-h-12 rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 px-8 py-3 font-black text-slate-950 shadow-[0_0_30px_rgba(56,189,248,0.35)] transition hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200">
+                Accept the Challenge
+            </button>
+        </div>
 
-    <!-- STATE: KEY GAINED TRANSITION -->
-    <section id="key-gained-screen" class="hidden fixed inset-0 z-[150] bg-black flex flex-col items-center justify-center p-6 text-center">
-        <div id="key-container" class="mb-12"><div id="magic-key" class="animate-bounce inline-block">🔑</div></div>
-        <h2 id="key-text" class="text-5xl font-bold cinzel glow-text mb-4 uppercase">Key Gained</h2>
-        <p class="text-amber-400 tracking-widest uppercase text-sm mb-12" id="key-subtext">The path is clear...</p>
-        <button onclick="animateUnlockDoor()" id="unlock-trigger" class="px-12 py-4 bg-amber-600 rounded-full font-bold text-black uppercase tracking-widest hover:scale-105 transition-all">Tap to Unlock</button>
-    </section>
-
-    <!-- STATE: DOOR REVEAL -->
-    <section id="door-screen" class="hidden fixed inset-0 z-[200] bg-[#050505] flex flex-col items-center justify-center p-6 text-center overflow-hidden">
-        <div class="door-container relative w-64 h-96 border-4 border-amber-900/50 rounded-t-full bg-black shadow-2xl">
-            <div id="door-leaf" class="door-leaf absolute inset-0 bg-gradient-to-br from-amber-800 to-amber-950 border-r-4 border-amber-600 flex items-center justify-center z-10">
-                <div id="keyhole" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-12 bg-black rounded-full border border-amber-500 z-20 pointer-events-none"></div>
-                <div class="w-12 h-12 rounded-full bg-amber-400 shadow-lg border-2 border-amber-900"></div>
+        <div id="birthday-puzzle-content" class="hidden">
+            <div class="text-center mb-8">
+                <span class="text-xs text-sky-400 uppercase tracking-[0.35em] font-bold block mb-3 cinzel">A LITTLE BIRTHDAY CHALLENGE</span>
+                <h2 class="text-3xl sm:text-5xl font-black cinzel glow-silver">Piece Together the Memories</h2>
+                <p class="text-slate-300 text-sm max-w-xl mx-auto mt-3">
+                    Put all 30 pieces back in place. Drag a piece to swap it, or tap two pieces.
+                </p>
             </div>
-            <div class="absolute inset-0 flex items-center justify-center text-white p-4 overflow-hidden"></div>
-        </div>
-        <div id="door-message" class="mt-12 opacity-0 transform translate-y-10 w-full max-w-md pointer-events-none">
-            <h3 id="door-title" class="text-3xl font-bold mb-4 cinzel glow-text">The Gate is Open!</h3>
-            <p id="reward-story" class="text-xl text-amber-400 font-bold mb-8 px-4 cinzel uppercase tracking-wide">ONLY 5 MOONS TO GO</p>
-            <div class="flex flex-col gap-4 px-4 pointer-events-auto">
-                <a id="reward-link" href="#" target="_blank" class="w-full px-8 py-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-bold rounded-full hover:scale-105 transition-all shadow-xl text-center">Watch Your Surprise 🎥</a>
-                <button id="personal-msg-btn" class="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold rounded-full hover:scale-105 transition-all shadow-xl border border-white/20">MESSAGE FOR YOU 💌</button>
-                <button onclick="returnToMapFromDoor()" class="w-full px-8 py-3 bg-white/5 text-gray-300 font-bold rounded-full hover:bg-white/10 transition-all border border-white/10">RETURN TO MAP 🗺️</button>
+
+            <div class="max-w-2xl mx-auto rounded-3xl border border-sky-400/30 bg-[#071330]/80 p-4 sm:p-6 shadow-[0_0_40px_rgba(56,189,248,0.18)]">
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <p id="puzzle-progress" class="text-sm font-bold text-sky-200" aria-live="polite">0 of 30 pieces in place · 0 moves</p>
+                    <button id="puzzle-shuffle-btn" type="button" class="min-h-11 rounded-full border border-sky-300/50 bg-sky-500/15 px-5 py-2 text-sm font-bold text-sky-100 transition hover:bg-sky-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200">
+                        Shuffle puzzle
+                    </button>
+                </div>
+                <div id="birthday-puzzle-board" class="birthday-puzzle-board" role="group" aria-label="30-piece birthday jigsaw puzzle" tabindex="-1"></div>
+                <p id="puzzle-status" class="mt-4 min-h-6 text-center text-sm text-slate-300" aria-live="polite">Select a piece, then select where it belongs.</p>
             </div>
         </div>
     </section>
 
-    <!-- STATE: PERSONAL MESSAGE MODAL -->
-    <div id="msg-overlay" class="hidden fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-6 text-center backdrop-blur-sm">
-        <div class="bg-gradient-to-b from-[#2a1a4a] to-[#0a0510] border-2 border-amber-500/50 p-8 rounded-3xl max-w-lg w-full relative shadow-[0_0_50px_rgba(255,215,0,0.2)]">
-            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center text-4xl shadow-xl">💌</div>
-            <h4 class="cinzel text-2xl mb-6 text-amber-400">A Magic Note</h4>
-            <div id="personal-msg-text" class="text-lg italic text-white leading-relaxed mb-8 max-h-[60vh] overflow-y-auto px-2"></div>
-            <button onclick="closePersonalMsg()" class="w-full py-3 bg-white/10 rounded-xl font-bold hover:bg-white/20 transition">Close Seal</button>
+    <section id="instagram-videos" class="relative z-20 max-w-5xl mx-auto px-4 py-16">
+        <div class="text-center mb-8">
+            <span class="text-xs text-sky-400 uppercase tracking-[0.35em] font-bold block mb-3 cinzel">A LITTLE SPOTLIGHT</span>
+            <h2 class="text-3xl sm:text-5xl font-black cinzel glow-silver">Moments to Remember</h2>
+            <p class="text-slate-300 text-sm max-w-2xl mx-auto mt-3">
+                Four special glimpses of the joy, smiles, and memories we celebrate today.
+            </p>
         </div>
-    </div>
 
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <article class="overflow-hidden rounded-3xl border border-sky-400/30 bg-[#071330]/80 p-3 shadow-[0_0_35px_rgba(56,189,248,0.15)]">
+                <a class="group relative block overflow-hidden rounded-2xl" href="https://www.instagram.com/reel/DWeI-aRk7J2/" target="_blank" rel="noopener noreferrer" aria-label="Watch Instagram video 1">
+                    <img class="aspect-[9/16] w-full object-cover transition duration-300 group-hover:scale-105" src="images/1000358007.jpg" alt="Thumbnail for Instagram video 1" loading="lazy">
+                    <span class="absolute inset-0 flex items-center justify-center bg-slate-950/20 text-5xl text-white transition group-hover:bg-slate-950/40">▶</span>
+                </a>
+            </article>
+            <article class="overflow-hidden rounded-3xl border border-sky-400/30 bg-[#071330]/80 p-3 shadow-[0_0_35px_rgba(56,189,248,0.15)]">
+                <a class="group relative block overflow-hidden rounded-2xl" href="https://www.instagram.com/reel/DWrPmFKjAw9/" target="_blank" rel="noopener noreferrer" aria-label="Watch Instagram video 2">
+                    <img class="aspect-[9/16] w-full object-cover transition duration-300 group-hover:scale-105" src="images/1000358008.jpg" alt="Thumbnail for Instagram video 2" loading="lazy">
+                    <span class="absolute inset-0 flex items-center justify-center bg-slate-950/20 text-5xl text-white transition group-hover:bg-slate-950/40">▶</span>
+                </a>
+            </article>
+            <article class="overflow-hidden rounded-3xl border border-sky-400/30 bg-[#071330]/80 p-3 shadow-[0_0_35px_rgba(56,189,248,0.15)]">
+                <a class="group relative block overflow-hidden rounded-2xl" href="https://www.instagram.com/reel/DWyy5A7japC/" target="_blank" rel="noopener noreferrer" aria-label="Watch Instagram video 3">
+                    <img class="aspect-[9/16] w-full object-cover transition duration-300 group-hover:scale-105" src="images/1000358009.jpg" alt="Thumbnail for Instagram video 3" loading="lazy">
+                    <span class="absolute inset-0 flex items-center justify-center bg-slate-950/20 text-5xl text-white transition group-hover:bg-slate-950/40">▶</span>
+                </a>
+            </article>
+            <article class="overflow-hidden rounded-3xl border border-sky-400/30 bg-[#071330]/80 p-3 shadow-[0_0_35px_rgba(56,189,248,0.15)]">
+                <a class="group relative block overflow-hidden rounded-2xl" href="https://www.instagram.com/reel/DX6fm3JMz_P/" target="_blank" rel="noopener noreferrer" aria-label="Watch Instagram video 4">
+                    <img class="aspect-[9/16] w-full object-cover transition duration-300 group-hover:scale-105" src="images/1000358011.jpg" alt="Thumbnail for Instagram video 4" loading="lazy">
+                    <span class="absolute inset-0 flex items-center justify-center bg-slate-950/20 text-5xl text-white transition group-hover:bg-slate-950/40">▶</span>
+                </a>
+            </article>
+        </div>
+    </section>
 
-        const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1.1, smoothWheel: true });
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
-        lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add((time) => { lenis.raf(time * 1000) });
+    <section id="secret-note" class="relative z-20 max-w-3xl mx-auto px-4 py-16 text-center">
+        <span class="text-xs text-sky-400 uppercase tracking-[0.35em] font-bold block mb-3 cinzel">JUST FOR YOU</span>
+        <h2 class="text-3xl sm:text-5xl font-black cinzel glow-silver">Birthday Notes, With Love</h2>
+        <p class="text-slate-300 text-sm max-w-xl mx-auto mt-3">
+            Open the little gifts to uncover three heartfelt birthday wishes, each written just for you.
+        </p>
 
-        // --- AUTOMATION: IST TIMEZONE ---
-        const BIRTHDAY_DATE = new Date("2026-05-18T00:00:00+05:30"); 
-        
-        // --- UPDATED SURPRISE LINKS ---
-        const REEL_LINKS = [
-            "https://i.ibb.co/W479dkJC/file-00000000740072089e5e410e05fff834.png", // 5 Days Left
-            "https://i.ibb.co/zh4wPNBt/IMG-20260506-113153.png", // 4 Days Left
-            "https://i.ibb.co/RTnGmh9x/IMG-20260506-123317.png", // 3 Days Left
-            "https://i.ibb.co/8gtq8JvL/1778063348894.png",         // 2 Days Left
-            "https://i.ibb.co/LXSRm3Hb/1778062505925.png",         // 1 Day Left
-            "https://i.ibb.co/4RDrDt9n/IMG-20260506-113242.png"  // Birthday Day
-        ];
-        
-        const PERSONAL_MESSAGES = [
-            "5 days left… Not just for a birthday, but to celebrate someone who quietly became an important chapter in my college life. You’ve been more than a senior — a guide, a vibe, and a presence I truly value.",
-            "4 days to go… Some people leave impressions, but you left impact. In small conversations, random moments, and simple smiles — you made this journey better.",
-            "3 days left… It’s strange how someone you met in college becomes someone you respect this much. Your energy, your way of handling things… it’s something I genuinely admire.",
-            "2 days to go… You deserve appreciation not just on your birthday, but for the person you are every day. Strong, calm, and effortlessly inspiring.",
-            "1 day left… Just a reminder — you’ve made more difference in people’s lives than you probably realize. And tomorrow, we celebrate you for that.",
-            "Stepping into 22 — not just another year, but another level of you. Through every moment, you’ve carried a rare strength and calm that truly stands out.<br><br>22 is your time — for growth, bigger dreams, and everything finding its way to you. Stay exactly who you are… that’s your power. Today, the spotlight is yours.<br><br>Once again, Happy Birthday, Adru ✨♥️🫂❤️‍🔥<br><br><span class='float-right'>~Pria_u</span>"
-        ];
+        <div class="secret-note-card mt-8 mx-auto max-w-md rounded-3xl border border-sky-400/30 bg-[#071330]/80 p-6 sm:p-8 shadow-[0_0_40px_rgba(56,189,248,0.18)]">
+            <button id="secret-gift-box" type="button" class="secret-gift-box mx-auto" aria-label="Open the gift box">
+                <span id="secret-box-stack" class="secret-box-stack" aria-hidden="true">
+                    <span class="secret-gift-layer is-active" style="--box-scale: 1">
+                        <span class="secret-gift-lid"></span>
+                        <span class="secret-gift-body"><span class="secret-gift-ribbon"></span></span>
+                    </span>
+                </span>
+            </button>
+            <p id="secret-box-prompt" class="mt-6 text-sm text-slate-300" aria-live="polite">Tap the box to open it</p>
+            <div id="secret-message" class="hidden mt-6 space-y-4 text-left" aria-live="polite">
+                <article class="secret-note-letter">
+                    <p class="secret-note-label">A birthday wish from</p>
+                    <h3 class="secret-note-sender">Adrus</h3>
+                    <p class="secret-note-copy">Happy birthday to one of the most special people in my life! I hope this year brings you so many happy moments, beautiful memories, and everything you’ve been wishing for. No matter how much life changes, I hope you always find reasons to smile and never forget how amazing you are. You deserve all the love and happiness in the world, and I’m really glad to have you in my life. Here’s to more laughter, crazy memories, and countless moments to look back on and smile about. Have the best birthday ever!</p>
+                    <p class="secret-note-signoff">With love, <span>Adrus</span></p>
+                </article>
+                <article class="secret-note-letter">
+                    <p class="secret-note-label">A birthday wish from</p>
+                    <h3 class="secret-note-sender">Arise</h3>
+                    <p class="secret-note-copy">Happy birthday! Wishing you lots of happiness, love, and success in everything you do. May this year bring you beautiful memories, exciting new experiences, and countless reasons to smile. Keep shining and always stay the amazing person you are!</p>
+                    <p class="secret-note-signoff">With love, <span>Arise</span></p>
+                </article>
+                <article class="secret-note-letter">
+                    <p class="secret-note-label">A birthday wish from</p>
+                    <h3 class="secret-note-sender">Pria_u</h3>
+                    <p class="secret-note-copy">Happy birthday! I hope your day is filled with happiness, love, and lots of beautiful moments. Keep smiling, keep singing, and never stop being the lovely person you are. Wishing you a wonderful year ahead filled with everything that makes you happy!</p>
+                    <p class="secret-note-signoff">With love, <span>Pria_u</span></p>
+                </article>
+            </div>
+        </div>
+    </section>
 
-        let testMode = false;
-        let progress = JSON.parse(localStorage.getItem('magic_progress')) || { daysCompleted: [], keys: 0 };
-        let currentActiveDay = 1;
-        let timerInterval = null;
-        let secretClickCount = 0;
+    <section id="birthday-timeline" class="relative z-20 mx-auto max-w-4xl px-4 py-16">
+        <div class="text-center">
+            <span class="text-xs text-sky-400 uppercase tracking-[0.35em] font-bold block mb-3 cinzel">HER STORY</span>
+            <h2 class="text-3xl sm:text-5xl font-black cinzel glow-silver">A Journey Through Time</h2>
+            <p class="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+                On 28 October 2004, the beloved daughter of Mr. and Mrs. Krishnakumar arrived and began a story destined to fill hearts with love, laughter, and happiness.
+            </p>
+        </div>
 
-        function saveProgress() { localStorage.setItem('magic_progress', JSON.stringify(progress)); }
+        <ol class="story-timeline mx-auto mt-10 max-w-2xl">
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card">
+                    <p class="story-timeline-date"><time datetime="2004">2004</time> · Chapter 01</p>
+                    <h3 class="story-timeline-title">The Beginning</h3>
+                    <img class="story-timeline-image" src="images/WhatsApp%20Image%202026-10-27%20at%2011.43.57%20PM.jpeg" alt="A sweet childhood portrait of Chachos" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">A tiny bundle of joy, a brand-new story, and a family whose world grew brighter. Her journey began in the loving arms of the two people who would always be her first home.</p>
+                </article>
+            </li>
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card">
+                    <p class="story-timeline-date"><time datetime="2005">2005</time>–<time datetime="2009">2009</time> · Chapter 02</p>
+                    <h3 class="story-timeline-title">Little Moments, Big Memories</h3>
+                    <img class="story-timeline-image" src="images/1000358007.jpg" alt="Chachos smiling among colorful flower garlands" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">Innocent smiles, playful adventures, and an endless curiosity made the little things unforgettable. Every photograph held a piece of a childhood that would never come again.</p>
+                </article>
+            </li>
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card">
+                    <p class="story-timeline-date"><time datetime="2010">2010</time>–<time datetime="2015">2015</time> · Chapter 03</p>
+                    <h3 class="story-timeline-title">Growing Up</h3>
+                    <img class="story-timeline-image" src="images/1000358008.jpg" alt="A candid moment with Chachos, taking a pause to check her phone" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">New friends, school days, laughter, and lessons opened up a world of new experiences. Little by little, she discovered the world around her and the person she was becoming.</p>
+                </article>
+            </li>
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card">
+                    <p class="story-timeline-date"><time datetime="2016">2016</time>–<time datetime="2020">2020</time> · Chapter 04</p>
+                    <h3 class="story-timeline-title">Becoming Her Own Person</h3>
+                    <img class="story-timeline-image" src="images/1000358009.jpg" alt="A smiling portrait of Chachos in a sunny courtyard" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">Dreams changed and grew, confidence blossomed, and friendships became unforgettable. As childhood slowly gave way to a new chapter, a world of possibilities opened up.</p>
+                </article>
+            </li>
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card">
+                    <p class="story-timeline-date"><time datetime="2020">2020</time>–<time datetime="2022">2022</time> · Chapter 05</p>
+                    <h3 class="story-timeline-title">The School Days</h3>
+                    <img class="story-timeline-image" src="images/1000358011.jpg" alt="Chachos visiting India Gate in New Delhi" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">Lessons reached far beyond textbooks, and friendships became memories to keep. When the final school bell rang, one chapter closed gently to make room for a new beginning.</p>
+                </article>
+            </li>
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card">
+                    <p class="story-timeline-date"><time datetime="2022">2022</time>–<time datetime="2026">2026</time> · Chapter 06</p>
+                    <h3 class="story-timeline-title">The College Chronicles</h3>
+                    <img class="story-timeline-image" src="images/IMG_20261027_225431.png" alt="Chachos beside a motorcycle in a teal sari" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">New beginnings, bigger dreams, and unexpected experiences shaped her in new ways. College became more than an academic journey: it was a place to grow, discover herself, and make memories for a lifetime.</p>
+                </article>
+            </li>
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card">
+                    <p class="story-timeline-date"><time datetime="2026">2026</time> · Chapter 07</p>
+                    <h3 class="story-timeline-title">The Woman She Is Today</h3>
+                    <img class="story-timeline-image" src="images/file_0000000035e88210a2cf1deaaf00f117.png" alt="A festive portrait of Chachos in a red sari" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">From the little girl she once was to the incredible person she is becoming, every chapter has added something beautiful. She carries her childhood memories, the lessons she has learned, and the dreams she continues to chase.</p>
+                </article>
+            </li>
+            <li class="story-timeline-entry">
+                <span class="story-timeline-marker" aria-hidden="true"></span>
+                <article class="story-timeline-card story-timeline-card-featured">
+                    <p class="story-timeline-date"><time datetime="2026-10-28">28 October</time> · Chapter 08</p>
+                    <h3 class="story-timeline-title">Another Beautiful Year</h3>
+                    <img class="story-timeline-image" src="images/WhatsApp%20Image%202026-10-28%20at%2012.54.25%20AM.jpeg" alt="Chachos celebrating graduation with a friend" loading="lazy" decoding="async">
+                    <p class="story-timeline-copy">Today celebrates every version of her: the little girl, the growing dreamer, the friend, the daughter, and the person she continues to become.</p>
+                </article>
+            </li>
+        </ol>
 
-        function toggleTestMode() { 
-            testMode = !testMode; 
-            const banner = document.getElementById('test-banner');
-            banner.classList.toggle('hidden', !testMode); 
-            renderMap();
-            if(testMode) {
-                confetti({ particleCount: 50, gravity: 0.5 });
-            }
-        }
+        <div class="story-ending mx-auto mt-10 max-w-2xl text-center">
+            <p class="story-ending-eyebrow">A NEW CHAPTER BEGINS…</p>
+            <p class="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
+                Her story is far from over. There are still places to explore, dreams to achieve, songs to sing, memories to create, and countless reasons to smile.
+            </p>
+            <p class="mt-5 text-lg font-semibold text-sky-200 cinzel">And the most beautiful chapters? They’re still waiting to be written.</p>
+            <p class="mt-6 text-xl font-black text-amber-200 cinzel">Happy Birthday!</p>
+            <p class="mt-2 text-sm leading-relaxed text-slate-300">Here’s to every chapter that made you who you are, and every beautiful chapter still ahead.</p>
+        </div>
+    </section>
 
-        function clearAllProgress() { 
-            if(confirm("Reset progress? This will lock completed levels.")) { 
-                localStorage.removeItem('magic_progress'); 
-                progress = { daysCompleted: [], keys: 0 }; 
-                renderMap(); 
-            } 
-        }
-
-        window.onload = () => {
-            initParticles(); setupParallax(); renderMap();
-            
-            // Secret Trigger
-            const mainTitle = document.getElementById('main-title');
-            mainTitle.addEventListener('click', () => {
-                secretClickCount++;
-                if (secretClickCount === 5) {
-                    toggleTestMode();
-                    secretClickCount = 0;
-                }
-                setTimeout(() => { secretClickCount = 0; }, 3000);
-            });
-
-            document.getElementById('personal-msg-btn').onclick = () => {
-                const overlay = document.getElementById('msg-overlay');
-                document.getElementById('personal-msg-text').innerHTML = PERSONAL_MESSAGES[currentActiveDay - 1];
-                overlay.classList.remove('hidden');
-                gsap.set(overlay.querySelector('div'), { scale: 0.8, opacity: 0 });
-                gsap.to(overlay.querySelector('div'), { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" });
-            };
-            window.addEventListener('resize', () => { drawConnections(); });
-        };
-
-        function scrollToLanding() { lenis.scrollTo(0, { duration: 1.5 }); }
-
-        function renderMap() {
-            const container = document.getElementById('nodes-container');
-            container.innerHTML = '';
-            const now = new Date();
-            for (let i = 1; i <= 6; i++) {
-                const unlockDate = new Date(BIRTHDAY_DATE);
-                unlockDate.setDate(unlockDate.getDate() - (6 - i));
-                const isU = testMode || now >= unlockDate || progress.daysCompleted.includes(i);
-                const isC = progress.daysCompleted.includes(i);
-                const alignClass = i % 2 === 0 ? 'self-end' : 'self-start';
-                const node = document.createElement('div');
-                node.id = `node-${i}`;
-                node.className = `map-node flex items-center justify-between w-[85%] p-5 rounded-2xl border-2 transition-all cursor-pointer ${alignClass} ${isU ? 'border-amber-500 bg-amber-900/20 node-glow' : 'locked border-gray-700 bg-gray-900'}`;
-                const daysLeft = (6-i);
-                const nodeTitle = daysLeft === 0 ? "BIRTHDAY" : `${daysLeft} Days Left`;
-                node.innerHTML = `<div class="flex items-center gap-5"><div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl bg-black border-2 border-amber-500">${isC ? '⭐' : i === 6 ? '🎂' : '✨'}</div><div class="text-left"><h4 class="text-lg font-bold cinzel">${nodeTitle}</h4><p class="text-[10px] opacity-60">${isU ? 'Portal Active' : 'Starts ' + unlockDate.toLocaleDateString('en-IN', {day: 'numeric', month: 'short'})}</p></div></div><div class="text-xl">${isC ? '✅' : isU ? '🔓' : '🔒'}</div>`;
-                if (isU) node.onclick = () => startDay(i);
-                else node.onclick = () => showTimer(unlockDate, nodeTitle);
-                container.appendChild(node);
-            }
-            setTimeout(drawConnections, 100);
-        }
-
-        function showTimer(targetDate, name) {
-            const overlay = document.getElementById('timer-overlay');
-            document.getElementById('timer-target-name').textContent = `${name} Unlocks In:`;
-            overlay.classList.remove('hidden');
-            gsap.set(overlay.querySelector('div'), { scale: 0.8, opacity: 0 });
-            gsap.to(overlay.querySelector('div'), { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)" });
-            updateTimer(targetDate);
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => updateTimer(targetDate), 1000);
-        }
-
-        function updateTimer(targetDate) {
-            const now = new Date();
-            const diff = targetDate - now;
-            if (diff <= 0) { closeTimer(); renderMap(); return; }
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const secs = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById('t-days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('t-hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('t-mins').textContent = mins.toString().padStart(2, '0');
-            document.getElementById('t-secs').textContent = secs.toString().padStart(2, '0');
-        }
-
-        function closeTimer() {
-            const overlay = document.getElementById('timer-overlay');
-            clearInterval(timerInterval);
-            gsap.to(overlay.querySelector('div'), { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => overlay.classList.add('hidden') });
-        }
-
-        function drawConnections() {
-            const svg = document.getElementById('map-svg');
-            const container = document.getElementById('map-screen');
-            const oldPaths = svg.querySelectorAll('path');
-            oldPaths.forEach(p => p.remove());
-            for (let i = 1; i < 6; i++) {
-                const nodeA = document.getElementById(`node-${i}`);
-                const nodeB = document.getElementById(`node-${i+1}`);
-                if (!nodeA || !nodeB) continue;
-                const rectA = nodeA.getBoundingClientRect(); const rectB = nodeB.getBoundingClientRect(); const cRect = container.getBoundingClientRect();
-                const x1 = rectA.left + rectA.width/2 - cRect.left; const y1 = rectA.top + rectA.height/2 - cRect.top;
-                const x2 = rectB.left + rectB.width/2 - cRect.left; const y2 = rectB.top + rectB.height/2 - cRect.top;
-                const controlX = i % 2 !== 0 ? cRect.width * 0.9 : cRect.width * 0.1;
-                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                path.setAttribute("d", `M ${x1} ${y1} Q ${controlX} ${(y1+y2)/2} ${x2} ${y2}`);
-                path.setAttribute("stroke", "rgba(255, 215, 0, 0.4)"); path.setAttribute("stroke-width", "2"); path.setAttribute("fill", "none"); path.setAttribute("stroke-dasharray", "8,8"); path.setAttribute("marker-end", "url(#arrowhead)");
-                svg.appendChild(path);
-                gsap.to(path, { strokeDashoffset: -100, repeat: -1, duration: 5, ease: "none" });
-            }
-        }
-
-        // --- GAME MODULES ---
-        function setupCandyCrush(targetMatches, onWin) {
-            const emojis = ['🍓','🍇','🍋','🍊','🍉','🍒'];
-            let matchesFound = 0; let grid = []; const size = 7;
-            const container = document.getElementById('game-content');
-            container.innerHTML = `<div class="text-center mb-6"><h3 class="text-2xl cinzel">Enchanted Harvest</h3><p class="text-amber-400">Score: <span id="score">0</span> / ${targetMatches}</p></div><div class="candy-grid mx-auto max-w-sm" id="candy-board"></div>`;
-            const board = document.getElementById('candy-board');
-            let sel = null;
-            function create() {
-                grid = []; board.innerHTML = '';
-                for (let i = 0; i < size * size; i++) {
-                    const e = emojis[Math.floor(Math.random() * emojis.length)]; grid.push(e);
-                    const d = document.createElement('div'); d.className = 'candy-item'; d.textContent = e;
-                    d.onclick = () => {
-                        if (sel === null) { sel = i; d.style.transform = 'scale(1.2)'; }
-                        else {
-                            const x1 = sel % size, y1 = Math.floor(sel / size), x2 = i % size, y2 = Math.floor(i / size);
-                            if (Math.abs(x1 - x2) + Math.abs(y1 - y2) === 1) { [grid[sel], grid[i]] = [grid[i], grid[sel]]; update(); if (!check(true)) { setTimeout(() => { [grid[sel], grid[i]] = [grid[i], grid[sel]]; update(); }, 300); } }
-                            board.children[sel].style.transform = ''; sel = null;
-                        }
-                    };
-                    board.appendChild(d);
-                }
-                check(false); 
-            }
-            function update() { grid.forEach((e, i) => { if(board.children[i]) board.children[i].textContent = e; }); }
-            function check(isMove) {
-                let found = false; const toRem = new Set();
-                for (let r = 0; r < size; r++) for (let c = 0; c < size - 2; c++) { let i = r * size + c; if (grid[i] && grid[i] === grid[i+1] && grid[i] === grid[i+2]) { toRem.add(i); toRem.add(i+1); toRem.add(i+2); found = true; } }
-                for (let c = 0; c < size; c++) for (let r = 0; r < size - 2; r++) { let i = r * size + c; if (grid[i] && grid[i] === grid[i+size] && grid[i] === grid[i+size*2]) { toRem.add(i); toRem.add(i+size); toRem.add(i+size*2); found = true; } }
-                if (found) {
-                    if (isMove) { matchesFound++; document.getElementById('score').textContent = matchesFound; }
-                    toRem.forEach(idx => grid[idx] = null);
-                    applyGravity();
-                    if (isMove && matchesFound >= targetMatches) setTimeout(onWin, 800);
-                    else setTimeout(() => check(isMove), 400);
-                    return true;
-                }
-                return false;
-            }
-            function applyGravity() {
-                for (let c = 0; c < size; c++) {
-                    let es = 0;
-                    for (let r = size - 1; r >= 0; r--) { let i = r * size + c; if (grid[i] === null) es++; else if (es > 0) { grid[i + es * size] = grid[i]; grid[i] = null; } }
-                    for (let r = 0; r < es; r++) grid[r * size + c] = emojis[Math.floor(Math.random() * emojis.length)];
-                }
-                update();
-            }
-            create();
-        }
-
-        function setupMemoryMatch(isHard, onWin) {
-            const container = document.getElementById('game-content');
-            const icons = ['🧙‍♂️', '🐉', '🦄', '💎', '🕯️', '🧪', '📜', '🏰', '🦉', '🔮', '⚔️', '🛡️', '👑', '🔥', '💧', '🌿', '🌙', '☀️'];
-            const pc = isHard ? 18 : 8;
-            let deck = [...icons.slice(0, pc), ...icons.slice(0, pc)].sort(() => Math.random() - 0.5);
-            container.innerHTML = `<div class="text-center mb-4"><h3 class="text-xl cinzel">Memory Trial</h3></div><div class="memory-grid ${isHard ? 'memory-grid-hard' : ''}" id="board"></div>`;
-            const board = document.getElementById('board');
-            let flp = [], solved = 0;
-            deck.forEach(icon => {
-                const card = document.createElement('div'); card.className = 'card';
-                card.innerHTML = `<div class="card-inner"><div class="card-front">✨</div><div class="card-back">${icon}</div></div>`;
-                card.onclick = () => {
-                    if (flp.length < 2 && !card.classList.contains('flipped')) {
-                        card.classList.add('flipped'); flp.push({ icon, card });
-                        if (flp.length === 2) {
-                            if (flp[0].icon === flp[1].icon) { solved++; flp = []; if (solved === pc) setTimeout(onWin, 800); }
-                            else { setTimeout(() => { flp.forEach(f => f.card.classList.remove('flipped')); flp = []; }, 1000); }
-                        }
-                    }
-                };
-                board.appendChild(card);
-            });
-        }
-
-        function setupEncryption(onWin, customWords) {
-            const container = document.getElementById('game-content');
-            let currentIdx = 0;
-            function nextRound() {
-                if (currentIdx >= customWords.length) { onWin(); return; }
-                const a = customWords[currentIdx];
-                container.innerHTML = `<div class="text-center space-y-6"><h3 class="text-2xl cinzel">Cypher Trial ${currentIdx+1}/${customWords.length}</h3><p class="text-xs opacity-60 italic mb-4">Shift letters back by 3</p><div class="text-5xl py-8 bg-white/5 rounded-xl border border-white/10 glow-text">${a.enc}</div><input type="text" id="inp" placeholder="DECODE..." class="w-full bg-black/50 border-2 border-amber-500 rounded-lg p-4 text-center text-2xl uppercase focus:outline-none"><button id="btn" class="w-full py-4 bg-amber-600 rounded-lg font-bold text-black uppercase">Break Seal</button></div>`;
-                document.getElementById('btn').onclick = () => {
-                    if (document.getElementById('inp').value.toUpperCase().trim() === a.dec) {
-                        currentIdx++;
-                        gsap.to(container, { opacity: 0, duration: 0.3, onComplete: () => { gsap.set(container, { opacity: 1 }); nextRound(); }});
-                    } else { gsap.fromTo("#inp", { x: -10 }, { x: 10, duration: 0.1, repeat: 5, yoyo: true }); }
-                };
-            }
-            nextRound();
-        }
-
-        function setupTicTacToe(onWin) {
-            const container = document.getElementById('game-content');
-            container.innerHTML = `<div class="text-center mb-6"><h3 class="text-2xl cinzel">Magic Tic-Tac-Toe</h3><p id="ttt-status" class="text-white mt-2">Your Turn (🪄)</p></div><div class="ttt-grid" id="ttt-board"><div class="ttt-cell" data-idx="0"></div><div class="ttt-cell" data-idx="1"></div><div class="ttt-cell" data-idx="2"></div><div class="ttt-cell" data-idx="3"></div><div class="ttt-cell" data-idx="4"></div><div class="ttt-cell" data-idx="5"></div><div class="ttt-cell" data-idx="6"></div><div class="ttt-cell" data-idx="7"></div><div class="ttt-cell" data-idx="8"></div></div>`;
-            const board = ["","","","","","","","",""]; const cells = document.querySelectorAll('.ttt-cell'); const status = document.getElementById('ttt-status'); let gameActive = true;
-            cells.forEach(cell => { cell.onclick = () => { const idx = cell.dataset.idx; if (board[idx] === "" && gameActive) { makeMove(idx, "🪄"); if (gameActive) { status.textContent = "Thinking..."; setTimeout(aiMove, 600); } } }; });
-            function makeMove(idx, s) { board[idx] = s; cells[idx].textContent = s; cells[idx].classList.add('taken'); checkWinner(); }
-            function aiMove() { if (!gameActive) return; const empty = board.map((v, i) => v === "" ? i : null).filter(v => v !== null); if (empty.length > 0) makeMove(empty[Math.floor(Math.random() * empty.length)], "🌑"); if (gameActive) status.textContent = "Your Turn (🪄)"; }
-            function checkWinner() {
-                const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-                for (let combo of wins) {
-                    const [a,b,c] = combo;
-                    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                        gameActive = false; if (board[a] === "🪄") { status.textContent = "Victory!"; confetti({ particleCount: 100 }); setTimeout(onWin, 1500); } else { status.textContent = "Defeat!"; setTimeout(() => setupTicTacToe(onWin), 1500); }
-                        return;
-                    }
-                }
-                if (!board.includes("") && gameActive) { gameActive = false; status.textContent = "Draw!"; setTimeout(() => setupTicTacToe(onWin), 1500); }
-            }
-        }
-
-        function completeDay(day) {
-            if (!progress.daysCompleted.includes(day)) { progress.daysCompleted.push(day); progress.keys++; saveProgress(); }
-            renderMap(); hideGame(); showKeyGained(day);
-        }
-
-        function hideGame() { document.getElementById('game-screen').classList.add('hidden'); document.body.style.overflow = 'auto'; lenis.start(); }
-
-        function startDay(day) { 
-            currentActiveDay = day; 
-            const screen = document.getElementById('game-screen');
-            const content = document.getElementById('game-content');
-            gsap.set(content, { opacity: 1, scale: 1 });
-            content.innerHTML = `<div class="text-center"><p class="text-xl mb-4 cinzel animate-pulse">Opening Portal ${day}...</p></div>`;
-            screen.classList.remove('hidden'); document.body.style.overflow = 'hidden'; lenis.stop();
-            setTimeout(() => {
-                switch(day) { 
-                    case 1: setupCandyCrush(10, () => completeDay(1)); break; 
-                    case 2: setupMemoryMatch(false, () => completeDay(2)); break; 
-                    case 3: setupCandyCrush(15, () => completeDay(3)); break; 
-                    case 4: setupMemoryMatch(true, () => completeDay(4)); break; 
-                    case 5: setupDay5(); break; 
-                    case 6: setupDay6(); break; 
-                }
-            }, 800);
-        }
-
-        function setupDay5() {
-            const content = document.getElementById('game-content');
-            gsap.set(content, { opacity: 1 });
-            content.innerHTML = `<div class="text-center space-y-6"><h2 class="text-3xl cinzel glow-text">The Triple Trial</h2><p class="text-amber-400 italic">Complete all tasks to reach the moon.</p></div>`;
-            setTimeout(() => {
-                setupCandyCrush(15, () => {
-                    gsap.to(content, { opacity: 0, duration: 0.5, onComplete: () => {
-                        gsap.set(content, { opacity: 1 });
-                        setupMemoryMatch(true, () => {
-                            gsap.to(content, { opacity: 0, duration: 0.5, onComplete: () => {
-                                gsap.set(content, { opacity: 1 });
-                                setupEncryption(() => completeDay(5), [{ enc: "DGULLLLQDOLQH", dec: "ADRIIIINALINE" }]);
-                            }});
-                        });
-                    }});
-                });
-            }, 1500);
-        }
-
-        function setupDay6() {
-            const content = document.getElementById('game-content');
-            content.innerHTML = `<div class="text-center space-y-8 py-10" id="bday-intro"><h2 class="text-4xl cinzel glow-text">A Birthday Miracle</h2><p class="text-amber-500 italic">Light the flame to reveal the path...</p><div id="magic-candle" class="w-24 h-24 bg-amber-500 rounded-full mx-auto flex items-center justify-center text-5xl cursor-pointer hover:scale-110 transition shadow-[0_0_40px_rgba(251,191,36,0.6)]">🕯️</div></div>`;
-            document.getElementById('magic-candle').onclick = () => {
-                confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
-                document.getElementById('bday-intro').innerHTML = `<h2 class="text-5xl cinzel glow-text animate-bounce uppercase">HAPPY BIRTHDAY!</h2><p class="text-amber-400 text-xl italic mt-6">The magic is intensifying...</p>`;
-                setTimeout(() => {
-                    gsap.to(content, { opacity: 0, duration: 0.5, onComplete: () => {
-                        gsap.set(content, { opacity: 1 });
-                        showUltimateTrialInstructions();
-                    }});
-                }, 3000);
-            };
-        }
-
-        function showUltimateTrialInstructions() {
-            const c = document.getElementById('game-content');
-            c.innerHTML = `<div class="text-center space-y-8 py-10"><h2 class="text-4xl cinzel glow-text animate-pulse uppercase">Ultimate Trial</h2><p class="text-amber-500 italic">Decode the ciphers and defeat the Dark Spirit.</p><button id="btn-begin" class="px-10 py-4 bg-amber-600 rounded-full font-bold text-black uppercase hover:scale-110 transition-all">Begin Final Trial</button></div>`;
-            document.getElementById('btn-begin').onclick = () => {
-                setupEncryption(() => {
-                    setupTicTacToe(() => completeDay(6));
-                }, [{ enc: "ELUWKGDB JLUO", dec: "BIRTHDAY GIRL" }, { enc: "PDJLF", dec: "MAGIC" }, { enc: "ZLQV", dec: "WINS" }]);
-            };
-        }
-
-        function showKeyGained(day) {
-            currentActiveDay = day; const s = document.getElementById('key-gained-screen'); const key = document.getElementById('magic-key');
-            s.classList.remove('hidden'); gsap.set(key, { scale: 0, rotation: -45, opacity: 1 }); gsap.set(["#key-text", "#key-subtext", "#unlock-trigger"], { opacity: 0, y: 15 });
-            const tl = gsap.timeline();
-            tl.to(key, { scale: 1, rotation: 0, duration: 1, ease: "back.out(1.7)" }).to("#key-text", { opacity: 1, y: 0, duration: 0.5 }, "-=0.3").to("#key-subtext", { opacity: 1, y: 0, duration: 0.5 }, "-=0.2").to("#unlock-trigger", { opacity: 1, y: 0, duration: 0.5 }, "-=0.2");
-        }
-
-        function animateUnlockDoor() {
-            const key = document.getElementById('magic-key'); const kScreen = document.getElementById('key-gained-screen'); const dScreen = document.getElementById('door-screen');
-            dScreen.classList.remove('hidden'); dScreen.style.opacity = 0; gsap.set("#door-leaf", { rotationY: 0 }); gsap.set("#door-message", { opacity: 0, y: 15 });
-            const countdowns = ["ONLY 5 MOONS TO GO", "Countdown: 4 Moons Away", "Countdown: 3 Moons Away", "Countdown: 2 Moons Away", "Countdown: 1 Moon Away", "THE MAGIC IS HERE! HAPPY BIRTHDAY!"];
-            document.getElementById('reward-story').textContent = countdowns[currentActiveDay-1];
-            document.getElementById('reward-link').href = REEL_LINKS[currentActiveDay-1];
-            const tl = gsap.timeline({ onComplete: () => { kScreen.classList.add('hidden'); } });
-            tl.to("#unlock-trigger", { opacity: 0, duration: 0.3 }).to(dScreen, { opacity: 1, duration: 0.5 }).to(key, { scale: 0.3, x: 0, y: -50, duration: 0.8, ease: "power2.inOut" }).to(key, { opacity: 0, scale: 0, duration: 0.3, onStart: () => { gsap.fromTo(".door-container", { x: -2 }, { x: 2, duration: 0.05, repeat: 10, yoyo: true }); } }).to("#door-leaf", { rotationY: -110, duration: 1.5, ease: "power2.inOut" }).to("#door-message", { opacity: 1, y: 0, duration: 1, onStart: () => { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); } });
-        }
-
-        function returnToMapFromDoor() {
-            const s = document.getElementById('door-screen');
-            gsap.to(s, { opacity: 0, duration: 0.5, onComplete: () => { s.classList.add('hidden'); s.style.opacity = 1; document.body.style.overflow = 'auto'; lenis.start(); }});
-        }
-
-        function closePersonalMsg() {
-            const o = document.getElementById('msg-overlay');
-            gsap.to(o.querySelector('div'), { opacity: 0, scale: 0.8, duration: 0.3, onComplete: () => o.classList.add('hidden') });
-        }
-
-        function setupParallax() {
-            gsap.to("#layer-stars", { scrollTrigger: { trigger: "#landing-screen", start: "top top", end: "bottom top", scrub: 1.5 }, y: -200, force3D: true });
-            gsap.to("#layer-mountains", { scrollTrigger: { trigger: "#landing-screen", start: "top top", end: "bottom top", scrub: 1 }, y: 250, force3D: true });
-            gsap.to("#layer-castle", { scrollTrigger: { trigger: "#landing-screen", start: "top top", end: "bottom top", scrub: 0.5 }, y: 500, force3D: true });
-            gsap.to("#main-title, #main-subtitle, #scroll-indicator", { scrollTrigger: { trigger: "#landing-screen", start: "top top", end: "50% top", scrub: true }, opacity: 0, scale: 0.9, y: -50, force3D: true });
-            gsap.to("#map-screen", { scrollTrigger: { trigger: "#map-screen", start: "top 80%", end: "top 20%", scrub: true }, opacity: 1, y: 0 });
-        }
-
-        function initParticles() {
-            const c = document.body;
-            for (let i = 0; i < 35; i++) {
-                const p = document.createElement('div'); p.className = 'particle'; const size = Math.random() * 3 + 1;
-                p.style.width = p.style.height = size + 'px'; p.style.left = Math.random() * 100 + 'vw'; p.style.top = Math.random() * 100 + 'vh';
-                c.appendChild(p); gsap.to(p, { y: "-=150", opacity: 0, duration: Math.random() * 4 + 3, repeat: -1, ease: "none" });
-            }
-        }
-    </script>
+    <!-- Script -->
+    <script src="script.js"></script>
 </body>
 </html>
