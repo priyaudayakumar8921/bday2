@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    CHACHOS' BIRTHDAY SYMPHONY - SCRIPT.JS
    Acoustic Piano Engine, Vinyl Mixtape, Awards & Audio Player
    ========================================================= */
@@ -1611,3 +1611,61 @@ window.onload = () => {
     renderSongSheetAccordion(currentActiveSongKey);
     startInteractiveGuide();
 };
+
+
+// ─── TOP-LEFT NAVIGATION MENU CONTROLLER ────────────────────────────────────
+(function initNavMenu() {
+    const toggleBtn = document.getElementById('nav-menu-toggle');
+    const dropdown = document.getElementById('nav-menu-dropdown');
+    const barsIcon = document.getElementById('menu-icon-bars');
+    const closeIcon = document.getElementById('menu-icon-close');
+    const navLinks = document.querySelectorAll('.nav-item-link');
+
+    if (!toggleBtn || !dropdown) return;
+
+    function openMenu() {
+        dropdown.classList.remove('hidden');
+        barsIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+        toggleBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+        dropdown.classList.add('hidden');
+        barsIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !dropdown.classList.contains('hidden');
+        if (isOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
+            closeMenu();
+        }
+    });
+
+    // Smooth scroll using Lenis when a link is clicked
+    navLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            closeMenu();
+            if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+                window.lenis.scrollTo(targetId, { duration: 1.4, offset: -20 });
+            } else {
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+})();

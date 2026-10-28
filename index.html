@@ -57,6 +57,66 @@
         <div id="notes-container" class="absolute inset-0"></div>
     </div>
 
+    <!-- 🌌 TOP-LEFT FLOATING SAPPHIRE NAVIGATION MENU -->
+    <div id="top-nav-menu" class="fixed top-5 left-5 z-[150]">
+        <!-- Menu Toggle Button -->
+        <button id="nav-menu-toggle" type="button" aria-expanded="false" aria-label="Toggle Navigation Menu" class="flex items-center gap-2.5 bg-[#08122c]/85 backdrop-blur-xl border border-sky-400/35 rounded-full px-4 py-2.5 text-slate-100 shadow-[0_0_25px_rgba(56,189,248,0.25)] transition-all duration-300 hover:border-sky-300 hover:scale-105 active:scale-95 focus:outline-none">
+            <svg id="menu-icon-bars" class="w-5 h-5 text-sky-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+            <svg id="menu-icon-close" class="w-5 h-5 text-sky-400 hidden transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            <span class="text-xs font-bold uppercase tracking-wider cinzel text-sky-200 hidden sm:inline">Explore</span>
+        </button>
+
+        <!-- Dropdown Menu Card -->
+        <nav id="nav-menu-dropdown" class="hidden absolute top-14 left-0 w-64 bg-[#08122c]/95 backdrop-blur-2xl border border-sky-400/30 rounded-2xl p-2.5 shadow-[0_10px_40px_rgba(3,7,20,0.8),0_0_30px_rgba(56,189,248,0.2)] transition-all duration-300 transform origin-top-left">
+            <div class="px-3 py-2 border-b border-sky-400/20 mb-1">
+                <span class="text-[10px] text-sky-400 font-bold uppercase tracking-[0.2em] cinzel block">Symphony Chapters</span>
+            </div>
+            <ul class="space-y-1">
+                <li>
+                    <a href="#landing-screen" class="nav-item-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:text-sky-300 hover:bg-sky-500/15 transition-all">
+                        <span class="text-base">✨</span>
+                        <span>Stage Spotlight</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#birthday-puzzle" class="nav-item-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:text-sky-300 hover:bg-sky-500/15 transition-all">
+                        <span class="text-base">🧩</span>
+                        <span>Birthday Challenge</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#instagram-videos" class="nav-item-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:text-sky-300 hover:bg-sky-500/15 transition-all">
+                        <span class="text-base">🎬</span>
+                        <span>Moments to Remember</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#secret-note" class="nav-item-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:text-sky-300 hover:bg-sky-500/15 transition-all">
+                        <span class="text-base">💌</span>
+                        <span>Birthday Notes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#birthday-timeline" class="nav-item-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:text-sky-300 hover:bg-sky-500/15 transition-all">
+                        <span class="text-base">📖</span>
+                        <span>Her Story Timeline</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#birthday-wishes-vault" class="nav-item-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:text-sky-300 hover:bg-sky-500/15 transition-all bg-sky-500/10 border border-sky-400/25">
+                        <span class="text-base">🎁</span>
+                        <span class="font-bold text-sky-200">Wishes Vault</span>
+                        <span class="ml-auto text-[9px] bg-sky-400/20 text-sky-300 px-1.5 py-0.5 rounded-full font-bold">New</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
     <!-- FLOATING SAPPHIRE VINYL PLAYER WIDGET -->
     <div id="music-player-widget" class="fixed top-5 right-5 z-[150] flex items-center gap-3 bg-[#08122c]/80 backdrop-blur-xl border border-sky-400/30 rounded-full pl-2 pr-4 py-2 shadow-[0_0_30px_rgba(56,189,248,0.25)] transition-all duration-300 hover:border-sky-300">
         <!-- Vinyl Record Disc -->
