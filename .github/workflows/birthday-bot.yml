@@ -1,0 +1,39 @@
+name: Birthday Message Bot Scheduler
+
+on:
+  schedule:
+    # Runs every 30 minutes (cron runs in UTC)
+    - cron: '*/30 * * * *'
+  # Allows you to manually trigger it anytime from the GitHub Actions tab!
+  workflow_dispatch:
+    inputs:
+      force_send:
+        description: 'Send immediately ignoring 8AM-10PM IST window'
+        required: false
+        default: 'true'
+        type: boolean
+
+jobs:
+  send-wish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm install firebase-admin
+
+      - name: Send Birthday Notification
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
+          FORCE_SEND: ${{ inputs.force_send || 'false' }}
+        run: |
+          node scripts/send-scheduled-wish.js
+

@@ -1072,3 +1072,61 @@ html.lenis { height: auto; }
         transition: none;
     }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   🎁  BIRTHDAY SURPRISE NOTIFICATION BUTTON
+   ─ Minimal, optional, matches the sapphire / midnight-blue theme.
+   ─ Appears once at the bottom of the page; invisible until scrolled to.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.surprise-unlock-btn {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             0.5rem;
+  padding:         0.75rem 1.75rem;
+  font-family:     'Cinzel Decorative', 'Cinzel', serif;
+  font-size:       0.8rem;
+  font-weight:     700;
+  letter-spacing:  0.08em;
+  text-transform:  uppercase;
+  color:           #030714;
+  background:      linear-gradient(135deg, #38bdf8 0%, #3b82f6 50%, #6366f1 100%);
+  border:          none;
+  border-radius:   9999px;
+  cursor:          pointer;
+  box-shadow:      0 0 28px rgba(56, 189, 248, 0.35),
+                   0 4px 16px rgba(0, 0, 0, 0.4);
+  transition:      transform 0.2s ease,
+                   box-shadow 0.2s ease,
+                   opacity    0.2s ease;
+  white-space:     nowrap;
+}
+
+.surprise-unlock-btn:hover:not(:disabled) {
+  transform:  translateY(-2px) scale(1.03);
+  box-shadow: 0 0 42px rgba(56, 189, 248, 0.55),
+              0 6px 22px rgba(0, 0, 0, 0.4);
+}
+
+.surprise-unlock-btn:active:not(:disabled) {
+  transform:  scale(0.97);
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.3);
+}
+
+.surprise-unlock-btn:disabled {
+  opacity: 0.65;
+  cursor:  not-allowed;
+}
+
+/* Subtle entrance animation for the notification section */
+#birthday-notification-section {
+  animation: botSectionFadeIn 0.8s ease both;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+@keyframes botSectionFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}

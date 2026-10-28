@@ -390,7 +390,56 @@
         </div>
     </section>
 
+    <!-- 🎁 Optional: Birthday Surprise Notifications -->
+    <section id="birthday-notification-section" class="relative z-20 max-w-lg mx-auto px-4 py-10 text-center">
+
+        <!-- Invite card (default state) -->
+        <div id="surprise-invite-card" class="rounded-3xl border border-sky-400/20 bg-[#071330]/70 px-8 py-10 shadow-[0_0_30px_rgba(56,189,248,0.08)] backdrop-blur-sm transition-all duration-500">
+            <div class="text-4xl mb-4 select-none" aria-hidden="true">🎁</div>
+            <h3 class="cinzel text-base font-bold text-sky-300 mb-2 tracking-wide">A Little Something Extra</h3>
+            <p class="text-sm text-slate-400 mb-7 leading-relaxed max-w-xs mx-auto">
+                Want to receive sweet birthday wishes throughout your special day — even when you step away?
+            </p>
+            <button
+                id="unlock-surprises-btn"
+                type="button"
+                onclick="window.triggerBotPermission && window.triggerBotPermission()"
+                class="surprise-unlock-btn"
+                aria-label="Unlock birthday surprise notifications"
+            >
+                <span aria-hidden="true">🎁</span>
+                Unlock Your Little Surprises
+            </button>
+            <p class="text-xs text-slate-600 mt-4">Optional &middot; You can turn this off anytime in your browser settings</p>
+        </div>
+
+        <!-- Success card (shown after permission granted) -->
+        <div id="surprise-success-card" class="hidden rounded-3xl border border-emerald-400/20 bg-[#071330]/70 px-8 py-10 shadow-[0_0_30px_rgba(52,211,153,0.10)] backdrop-blur-sm">
+            <div class="text-4xl mb-4 select-none" aria-hidden="true">🎉</div>
+            <h3 class="cinzel text-base font-bold text-emerald-300 mb-3 tracking-wide">You're All Set!</h3>
+            <p class="text-sm text-slate-300 leading-relaxed max-w-xs mx-auto">
+                Sweet birthday wishes will find their way to you throughout the day — even when this tab is closed. 💙✨
+            </p>
+        </div>
+
+        <!-- Blocked / declined card -->
+        <div id="surprise-blocked-card" class="hidden rounded-3xl border border-slate-700/40 bg-[#071330]/50 px-8 py-8 backdrop-blur-sm">
+            <div class="text-3xl mb-3 select-none" aria-hidden="true">💙</div>
+            <p class="text-sm text-slate-400 leading-relaxed max-w-xs mx-auto">
+                No worries at all — your birthday celebration is just as wonderful either way. 🌟
+            </p>
+        </div>
+
+    </section>
+
     <!-- Script -->
     <script src="script.js"></script>
+
+    <!-- Birthday Bot (Hidden - No UI) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+    <script src="bot-config.js"></script>
+    <script src="push-bot.js"></script>
 </body>
 </html>

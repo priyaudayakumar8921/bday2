@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Bot — Admin Panel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #030714;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: #071330;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 0 50px rgba(56, 189, 248, 0.08);
+    }
+
+    .logo { font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; }
+
+    h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-align: center;
+      color: #7dd3fc;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #475569;
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7dd3fc;
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="password"], input[type="text"], textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 0.75rem;
+      padding: 0.7rem 1rem;
+      color: #e2e8f0;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: rgba(56, 189, 248, 0.6);
+    }
+
+    textarea { min-height: 80px; resize: vertical; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      margin-top: 0.5rem;
+    }
+
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:not(:disabled):hover { transform: translateY(-1px); }
+    .btn:not(:disabled):active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8, #3b82f6, #6366f1);
+      color: #030714;
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #7dd3fc;
+    }
+
+    .status-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .status-box.show { display: block; }
+    .status-ok   { background: rgba(52, 211, 153, 0.08); border: 1px solid rgba(52, 211, 153, 0.3); color: #6ee7b7; }
+    .status-err  { background: rgba(248, 113, 113, 0.08); border: 1px solid rgba(248, 113, 113, 0.3); color: #fca5a5; }
+    .status-info { background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2);  color: #7dd3fc; }
+
+    .divider {
+      height: 1px;
+      background: rgba(56, 189, 248, 0.1);
+      margin: 1.5rem 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .info-row span:first-child { color: #64748b; }
+    .info-row span:last-child  { color: #e2e8f0; font-weight: 600; }
+
+    .setup-warning {
+      background: rgba(251, 191, 36, 0.07);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      font-size: 0.78rem;
+      color: #fde68a;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    #login-section, #admin-section { display: none; }
+    #login-section.active, #admin-section.active { display: block; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .tag-ok  { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+    .tag-err { background: rgba(248,113,113,0.15); color: #fca5a5; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">🎂</div>
+  <h1>Birthday Bot Admin</h1>
+  <p class="subtitle">Private panel · For Pria_u only</p>
+
+  <!-- ─── LOGIN ─────────────────────────────────────────────────── -->
+  <div id="login-section" class="active">
+    <label for="admin-pin">Admin Secret</label>
+    <input type="password" id="admin-pin" placeholder="Enter admin secret…" autocomplete="off">
+
+    <button class="btn btn-primary" onclick="login()">Sign In</button>
+
+    <div id="login-status" class="status-box"></div>
+
+    <div class="divider"></div>
+
+    <div class="setup-warning">
+      ⚠️ <strong>First-time setup?</strong><br>
+      Before this panel works, you must:<br>
+      1. Create Firebase Realtime Database<br>
+      2. Upgrade to Blaze plan<br>
+      3. Deploy Cloud Functions (<code>firebase deploy --only functions</code>)<br>
+      4. Update <code>databaseURL</code> in <code>bot-config.js</code>
+    </div>
+  </div>
+
+  <!-- ─── ADMIN PANEL ────────────────────────────────────────────── -->
+  <div id="admin-section">
+
+    <div id="subscriber-info" class="status-box status-info show">
+      Loading subscriber info…
+    </div>
+
+    <div class="divider"></div>
+
+    <label for="test-msg">Test Message (optional — leave blank for default)</label>
+    <textarea
+      id="test-msg"
+      placeholder="Hey Chachos! This is a test notification from Pria_u 💙"
+    ></textarea>
+
+    <button class="btn btn-primary" onclick="sendTest()">
+      🚀 Send Test Notification
+    </button>
+
+    <button class="btn btn-secondary" style="margin-top:0.75rem" onclick="loadInfo()">
+      🔄 Refresh Subscriber Info
+    </button>
+
+    <div id="test-status" class="status-box"></div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:0.72rem;color:#475569;text-align:center;line-height:1.5">
+      Cloud Function URLs (us-central1):<br>
+      <code style="color:#7dd3fc">sendTestNotification</code> &nbsp;|&nbsp;
+      <code style="color:#7dd3fc">getSubscriberInfo</code>
+    </p>
+  </div>
+</div>
+
+<!-- Firebase compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+<script src="bot-config.js"></script>
+
+<script>
+  /* ─── Firebase Cloud Function base URLs ──────────────────────────────────
+     These are the v1 HTTPS function URLs (predictable format).
+     They become active only after you run: firebase deploy --only functions
+     ─────────────────────────────────────────────────────────────────────── */
+  const REGION     = 'us-central1';
+  const PROJECT_ID = 'birthday-message-bot';
+  const BASE_URL   = `https://${REGION}-${PROJECT_ID}.cloudfunctions.net`;
+
+  const ENDPOINTS = {
+    test: `${BASE_URL}/sendTestNotification`,
+    info: `${BASE_URL}/getSubscriberInfo`
+  };
+
+  /* ─── State ──────────────────────────────────────────────────────────── */
+  let adminSecret = '';
+
+  /* ─── Helper: show status ────────────────────────────────────────────── */
+  function setStatus(id, html, type = 'info') {
+    const el = document.getElementById(id);
+    el.className = `status-box show status-${type}`;
+    el.innerHTML = html;
+  }
+
+  /* ─── Login ──────────────────────────────────────────────────────────── */
+  function login() {
+    const pin = document.getElementById('admin-pin').value.trim();
+    if (!pin) {
+      setStatus('login-status', '⚠️ Please enter the admin secret.', 'err');
+      return;
+    }
+    adminSecret = pin;
+    document.getElementById('login-section').classList.remove('active');
+    document.getElementById('admin-section').classList.add('active');
+    loadInfo();
+  }
+
+  // Allow Enter key in PIN field
+  document.getElementById('admin-pin').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+
+  /* ─── Load subscriber info ────────────────────────────────────────────── */
+  async function loadInfo() {
+    setStatus('subscriber-info', '⏳ Loading subscriber info…', 'info');
+    try {
+      const res  = await fetch(ENDPOINTS.info, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ secret: adminSecret })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStatus('subscriber-info',
+          `❌ ${data.error || 'Request failed (status ' + res.status + ')'}.<br>` +
+          `Make sure Cloud Functions are deployed.`, 'err');
+        return;
+      }
+
+      const count = data.subscriberCount ?? 0;
+      let html = `<strong>📱 ${count} subscriber${count !== 1 ? 's' : ''}</strong><br><br>`;
+
+      if (data.subscribers?.length) {
+        html += data.subscribers.map(s =>
+          `<div class="info-row">
+             <span>${s.device.slice(0, 30)}</span>
+             <span>${s.subscribedAt.slice(0, 10)}</span>
+           </div>`
+        ).join('');
+      }
+
+      if (data.recentDeliveries?.length) {
+        html += `<br><strong>Recent deliveries:</strong><br>`;
+        html += data.recentDeliveries.slice(0, 5).map(d =>
+          `<div class="info-row">
+             <span>${d.time || d.timestamp || '—'}</span>
+             <span>
+               <span class="tag ${d.sent > 0 ? 'tag-ok' : 'tag-err'}">
+                 ${d.sent ?? 0} sent
+               </span>
+               ${d.type === 'test' ? '<span class="tag tag-ok">test</span>' : ''}
+             </span>
+           </div>`
+        ).join('');
+      }
+
+      setStatus('subscriber-info', html, 'info');
+    } catch (e) {
+      setStatus('subscriber-info',
+        `❌ Network error: ${e.message}<br>` +
+        `Cloud Functions may not be deployed yet, or the DB URL may be incorrect.`,
+        'err');
+    }
+  }
+
+  /* ─── Send test notification ──────────────────────────────────────────── */
+  async function sendTest() {
+    const msg = document.getElementById('test-msg').value.trim();
+    setStatus('test-status', '⏳ Sending test notification…', 'info');
+
+    try {
+      const res  = await fetch(ENDPOINTS.test, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ secret: adminSecret, message: msg || undefined })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStatus('test-status',
+          `❌ ${data.error || 'Request failed (status ' + res.status + ')'}`, 'err');
+        return;
+      }
+
+      const { sent, failed, total } = data;
+      if (total === 0) {
+        setStatus('test-status',
+          `⚠️ No subscribers found yet.<br>` +
+          `Chachos needs to open the website and tap "Unlock Your Little Surprises" first.`,
+          'err');
+      } else {
+        setStatus('test-status',
+          `✅ Test sent! &nbsp;<strong>${sent}</strong> delivered` +
+          (failed ? `, <strong>${failed}</strong> failed` : '') +
+          ` (${total} device${total !== 1 ? 's' : ''} total).<br>` +
+          `Check the device for the notification!`,
+          'ok');
+        setTimeout(loadInfo, 2000);
+      }
+    } catch (e) {
+      setStatus('test-status',
+        `❌ Network error: ${e.message}<br>` +
+        `Ensure Cloud Functions are deployed and the project is on Blaze plan.`,
+        'err');
+    }
+  }
+</script>
+
+</body>
+</html>
+
