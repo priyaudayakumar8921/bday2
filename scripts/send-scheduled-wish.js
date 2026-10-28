@@ -2,7 +2,7 @@
  * scripts/send-scheduled-wish.js
  * 
  * Free background sender powered by GitHub Actions & Firebase Spark Plan.
- * No Firebase Blaze plan or paid Cloud Functions needed!
+ * Sends personalized birthday wishes for Aswini!
  */
 
 const admin = require('firebase-admin');
@@ -30,26 +30,173 @@ admin.initializeApp({
 
 const db = admin.database();
 
-// 2. Birthday Messages List
+// 2. Custom Birthday Messages for Aswini (33 messages with senders)
 const BIRTHDAY_MESSAGES = [
-  "Hey Chachos! 🎂 Just a tiny reminder that today is YOUR day and you deserve every bit of happiness coming your way! ✨",
-  "Someone is thinking of you and wishing you the most beautiful birthday ever, Chachos! 💙 Hope your day feels as special as you are.",
-  "A little birthday message for the person who makes every moment brighter just by being there. Happy birthday, Chachos! 🌟",
-  "Chachos! 🎉 May this year bring you bigger stages, brighter lights, and every dream you've been quietly wishing for. You've got this! 🎶",
-  "Not just today, but every single day — you deserve to feel celebrated, loved, and incredibly special. Happy birthday! 💫 — Pria_u",
-  "Here's to 22 years of being absolutely wonderful, Chachos! 🥂 The world is a lovelier place because you're in it.",
-  "Wishing you a day filled with unexpected joy, warm hugs, and all the things that make your heart smile the most. 🎈 Happy birthday!",
-  "Chachos, your voice doesn't just fill a room — it fills hearts. Keep singing, keep shining, and never stop being you. 🎤✨ Happy birthday!",
-  "Every once in a while someone comes into your life and makes it infinitely better. You're that person for so many people, Chachos. 💙 Happy birthday!",
-  "On your special day, just want you to know: you are kind, you are talented, and you are so deeply appreciated. 🌸 Have the most magical birthday!",
-  "Sending you a little burst of birthday love across the miles, Chachos! 💌 Hope it makes you smile at least once today. 😊",
-  "Another year of you being effortlessly amazing — and honestly, we're all here for it. 🎂 Happy birthday, Chachos! Keep dazzling us!",
-  "You have this rare ability to make ordinary moments feel extraordinary. That's a gift, Chachos, and the world needs more of it. 🌠 Happy birthday!",
-  "This is your gentle birthday reminder that you are loved more than you probably realize. 💙 Enjoy every second of today, Chachos! 🎉",
-  "Chachos! 🎂 May your day be as beautiful, warm, and full of life as you make every room you walk into. Happiest of birthdays!",
-  "Here's to new adventures, deeper friendships, sweeter music, and a year that's even more wonderful than the last. 🥳 Happy birthday!",
-  "Today the universe is celebrating too — because someone as special as you only comes along once. 🌌 Happy birthday, Chachos! 💙",
-  "Last but never least: you are loved, you are enough, and you deserve every good thing heading your way. 🎂✨ From Pria_u, with all the love — happy birthday, Chachos! 💙"
+  // 1 — Anonymous
+  {
+    message: "Happy Birthday, Aswini! 🥳❤️",
+    sender: "Anonymous"
+  },
+  // 2 — Adru
+  {
+    message: "Happy Birthday to my favourite human everrr! 🥹❤️🫂 Life is so much more beautiful with you in it, and I hope this world gives you all the happiness and love you deserve. No matter where life takes us, you'll always have me. Love you endlessly, chunnniiiii 🧿❤️✨",
+    sender: "Adru"
+  },
+  // 3 — Anonymous
+  {
+    message: "Hey Aswini! 🎂✨ Hope you're having an amazing birthday!",
+    sender: "Anonymous"
+  },
+  // 4 — Arise
+  {
+    message: "Happy birthday Choss...may your pockets never go empty 🙏🥳",
+    sender: "Arise"
+  },
+  // 5 — Anonymous
+  {
+    message: "Happy Birthday, Aswini! May all your wishes come true! 🥳💖",
+    sender: "Anonymous"
+  },
+  // 6 — Pria_u
+  {
+    message: "Happy Birthday Aswini Chechi! 😂😍🤩♥️🥰🫂🫂 Wishing you a fantastic day and a wonderful year ahead! senior aanenkilum enne oru friend ne pole consider cheytu and also support cheyyane big thanks chechi! 😘🫂♥️ Enjoy your day to the fullest! 🥳✨\nAlways adipoli aayit erikkatte 😘🥰🤩😘🫂",
+    sender: "Pria_u"
+  },
+  // 7 — Anonymous
+  {
+    message: "Aswini, hope your day is filled with happiness, laughter, and lots of cake! 🎂😂",
+    sender: "Anonymous"
+  },
+  // 8 — Adru
+  {
+    message: "Haloooo Chunnoooo\nHappy Birthdayy diiii🤩🤩🔥🔥🥳🥳\nElla santhoshavum anugrahavum sampathum nerunnu..petenn nee take money aavatte🤣🤩🔥🤞🏼😎\nEnn snehapoorvam drunnoo😘❤️",
+    sender: "Adru"
+  },
+  // 9 — Anonymous
+  {
+    message: "Birthday reminder, Aswini: Today is your special day! Enjoy every moment! 🎉❤️",
+    sender: "Anonymous"
+  },
+  // 10 — Arise
+  {
+    message: "Happy Birthday, Aswini! 🥳 May your life be full of happiness, success, and of course, lots of money! 😂💸 Have a fantastic year ahead!",
+    sender: "Arise"
+  },
+  // 11 — Anonymous
+  {
+    message: "Aswini, wishing you a beautiful year filled with new opportunities and happy memories! ✨",
+    sender: "Anonymous"
+  },
+  // 12 — Pria_u
+  {
+    message: "Happy Birthday, Aswini Chechi! 🥳❤️ Iniyum orupaadu nalla opportunities kittatte, life-il nalla reethiyil munneraan pattatte! Keep smiling and stay awesome, chechi! ✨",
+    sender: "Pria_u"
+  },
+  // 13 — Anonymous
+  {
+    message: "Aswini, have you had your birthday cake yet? 👀🍰",
+    sender: "Anonymous"
+  },
+  // 14 — Adru
+  {
+    message: "Aswiniiiii, happy birthday diiii! 🥹❤️ I hope this year gives you so many beautiful moments, unexpected happiness, and everything you've been wishing for. Stay happy always, my girl! 🧿✨",
+    sender: "Adru"
+  },
+  // 15 — Anonymous
+  {
+    message: "Just a little birthday surprise for you, Aswini! Hope this makes you smile! ❤️",
+    sender: "Anonymous"
+  },
+  // 16 — Arise
+  {
+    message: "Aswini, wishing you good health, great memories, and plenty of reasons to smile this year! Happy Birthday! 🎂✨",
+    sender: "Arise"
+  },
+  // 17 — Anonymous
+  {
+    message: "Aswini, may this year bring you lots of success, good health, and happiness! 🌸",
+    sender: "Anonymous"
+  },
+  // 18 — Pria_u
+  {
+    message: "Aswini Chechi, wishing you lots of happiness and success in everything you do! 🫂❤️ Enjoy your special day and always stay happy. Happy Birthday! 🥳",
+    sender: "Pria_u"
+  },
+  // 19 — Anonymous
+  {
+    message: "Hey Aswini! Quick birthday check-in. Hope you're enjoying your special day! 🥳",
+    sender: "Anonymous"
+  },
+  // 20 — Adru
+  {
+    message: "Happy Birthday, my favourite person! 🥹❤️ Life wouldn't be the same without all our memories and madness. I hope we keep making a million more together. Love you endlessly! 🫂❤️✨",
+    sender: "Adru"
+  },
+  // 21 — Anonymous
+  {
+    message: "Aswini, birthday rule number one: Extra cake is always allowed today! 😂🍰",
+    sender: "Anonymous"
+  },
+  // 22 — Anonymous
+  {
+    message: "Happy Birthday, Aswini! Keep smiling and shining wherever you go! ✨❤️",
+    sender: "Anonymous"
+  },
+  // 23 — Anonymous
+  {
+    message: "Aswini, the birthday celebrations aren't over yet! Enjoy the rest of your day! 🎉",
+    sender: "Anonymous"
+  },
+  // 24 — Anonymous
+  {
+    message: "One more birthday wish for you, Aswini! Hope today gives you a reason to smile! 💖",
+    sender: "Anonymous"
+  },
+  // 25 — Anonymous
+  {
+    message: "Aswini, wishing you plenty of happy moments and wonderful surprises this year! 🎁✨",
+    sender: "Anonymous"
+  },
+  // 26 — Anonymous
+  {
+    message: "Happy Birthday, Aswini! May the coming year be even better than the last! 🥳",
+    sender: "Anonymous"
+  },
+  // 27 — Anonymous
+  {
+    message: "Aswini, don't forget to take lots of pictures today. Birthday memories are special! 📸❤️",
+    sender: "Anonymous"
+  },
+  // 28 — Anonymous
+  {
+    message: "Hey Aswini! Sending you another little dose of birthday happiness! 🎂💖",
+    sender: "Anonymous"
+  },
+  // 29 — Anonymous
+  {
+    message: "Aswini, hope you've been spoiled with love, gifts, and good food today! 😂🎁",
+    sender: "Anonymous"
+  },
+  // 30 — Anonymous
+  {
+    message: "Happy Birthday once again, Aswini! Keep making beautiful memories! ✨",
+    sender: "Anonymous"
+  },
+  // 31 — Anonymous
+  {
+    message: "Aswini, it's your birthday, so leave all the worries aside and enjoy yourself! 🥳❤️",
+    sender: "Anonymous"
+  },
+  // 32 — Anonymous
+  {
+    message: "Aswini, hope your birthday has been as wonderful as you deserve! 🌷❤️",
+    sender: "Anonymous"
+  },
+  // 33 — Anonymous — final birthday wish
+  {
+    message: "Before your birthday ends, one last wish for you, Aswini: may this year bring you beautiful things! 🌙✨",
+    sender: "Anonymous"
+  }
 ];
 
 async function run() {
@@ -63,8 +210,8 @@ async function run() {
   console.log(`🕒 Current IST Time: ${istTime.toLocaleTimeString('en-US', { hour12: true })} (Hour: ${currentHour})`);
 
   // Allow manual run regardless of hour if triggered with FORCE_SEND=true
-  if (process.env.FORCE_SEND !== 'true' && (currentHour < 8 || currentHour >= 22)) {
-    console.log("🌙 Outside 8:00 AM - 10:00 PM IST window. Skipping scheduled message.");
+  if (process.env.FORCE_SEND !== 'true' && (currentHour < 8 || currentHour >= 23)) {
+    console.log("🌙 Outside sending window (8:00 AM - 11:00 PM IST). Skipping scheduled message.");
     process.exit(0);
   }
 
@@ -74,7 +221,7 @@ async function run() {
   const subs = snapshot.val();
 
   if (!subs) {
-    console.log("ℹ️ No subscribers found in database yet. Once Chachos clicks 'Unlock Your Little Surprises', token will appear.");
+    console.log("ℹ️ No subscribers found in database yet. Once Aswini clicks 'Unlock Your Little Surprises', token will appear.");
     process.exit(0);
   }
 
@@ -94,21 +241,26 @@ async function run() {
   const stateSnap = await botStateRef.once('value');
   const lastIndex = stateSnap.val() ?? -1;
   const nextIndex = (lastIndex + 1) % BIRTHDAY_MESSAGES.length;
-  const messageToSend = BIRTHDAY_MESSAGES[nextIndex];
+  const item = BIRTHDAY_MESSAGES[nextIndex];
 
-  console.log(`✉️ Sending message #${nextIndex + 1}: "${messageToSend}"`);
+  // Notification title reflects sender if not anonymous
+  const notifTitle = item.sender && item.sender !== 'Anonymous' 
+    ? `🎂 Birthday Wish from ${item.sender} ✨` 
+    : `🎂 Birthday Surprise ✨`;
+
+  console.log(`✉️ Sending message #${nextIndex + 1} (${item.sender}): "${item.message.slice(0, 50)}..."`);
 
   // Send multicast notification
   const response = await admin.messaging().sendEachForMulticast({
     tokens: tokens,
     notification: {
-      title: '🎂 Birthday Wish ✨',
-      body: messageToSend
+      title: notifTitle,
+      body: item.message
     },
     webpush: {
       notification: {
-        title: '🎂 Birthday Wish ✨',
-        body: messageToSend,
+        title: notifTitle,
+        body: item.message,
         icon: '/images/WhatsApp%20Image%202026-10-27%20at%2011.43.57%20PM.jpeg',
         badge: '/images/WhatsApp%20Image%202026-10-27%20at%2011.43.57%20PM.jpeg',
         tag: 'birthday-wish',
@@ -147,7 +299,8 @@ async function run() {
   // Log delivery
   await db.ref(`deliveryLog/${Date.now()}`).set({
     type: 'github-actions-schedule',
-    message: messageToSend,
+    sender: item.sender,
+    message: item.message,
     sent: response.successCount,
     failed: response.failureCount,
     time: istTime.toString()
@@ -161,4 +314,3 @@ run().catch(err => {
   console.error("❌ Fatal error:", err);
   process.exit(1);
 });
-
