@@ -432,6 +432,24 @@
 
     </section>
 
+    <!-- 🌟 HOURLY BIRTHDAY SURPRISE VAULT (33 Timed Wishes) 🌟 -->
+    <section id="birthday-wishes-vault" class="relative z-20 max-w-5xl mx-auto px-4 py-16 text-center">
+        <span class="text-xs text-sky-400 uppercase tracking-[0.35em] font-bold block mb-3 cinzel">TIMED SURPRISES</span>
+        <h2 class="text-3xl sm:text-5xl font-black cinzel glow-silver">Birthday Wishes Vault</h2>
+        <p class="text-slate-300 text-sm max-w-xl mx-auto mt-3">
+            Special birthday wishes unlock one by one throughout your day! Check back every 30 minutes to uncover new messages from those who adore you. 💙
+        </p>
+        <div class="mt-4">
+            <span id="vault-unlocked-count" class="inline-block px-4 py-1.5 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-300 text-xs font-bold uppercase tracking-wider">
+                Loading surprises...
+            </span>
+        </div>
+
+        <div id="hourly-wishes-grid" class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 text-left">
+            <!-- Dynamically populated by hourly-wishes.js -->
+        </div>
+    </section>
+
     <!-- Script -->
     <script src="script.js"></script>
 
@@ -441,5 +459,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
     <script src="bot-config.js"></script>
     <script src="push-bot.js"></script>
+    <!-- Timed Wishes Vault -->
+    <script src="hourly-wishes.js"></script>
 </body>
 </html>

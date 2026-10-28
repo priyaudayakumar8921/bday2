@@ -1129,3 +1129,99 @@ html.lenis { height: auto; }
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0);    }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   🌟 HOURLY BIRTHDAY WISHES VAULT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.wish-vault-card {
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.wish-vault-card.is-unlocked {
+  background: linear-gradient(145deg, rgba(7, 19, 48, 0.85), rgba(12, 30, 77, 0.65));
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.12);
+}
+
+.wish-vault-card.is-unlocked:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.25);
+  border-color: rgba(56, 189, 248, 0.6);
+}
+
+.wish-vault-card.is-locked {
+  background: rgba(7, 19, 48, 0.4);
+  border: 1px dashed rgba(148, 163, 184, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 140px;
+}
+
+.wish-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.wish-sender-badge {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #7dd3fc;
+  letter-spacing: 0.05em;
+}
+
+.wish-time-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.wish-message-body {
+  font-size: 0.88rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.wish-locked-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.wish-lock-icon {
+  font-size: 1.5rem;
+  opacity: 0.6;
+  margin-bottom: 0.25rem;
+}
+
+.wish-lock-time {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wish-lock-hint {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-style: italic;
+}
