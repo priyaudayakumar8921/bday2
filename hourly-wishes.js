@@ -1,7 +1,8 @@
 /**
  * hourly-wishes.js
  * Timed Birthday Wishes Vault
- * Automatically unlocks wishes throughout the day based on time!
+ * Automatically unlocks wishes throughout the day based on time
+ * with a live ticking countdown timer to the next surprise!
  */
 
 (function () {
@@ -59,60 +60,113 @@
     return hours * 60 + minutes;
   }
 
+  let nextWishMinutesTarget = null;
+  let lastUnlockedCount = -1;
+
   function renderVault() {
     const container = document.getElementById('hourly-wishes-grid');
-    const unlockedCounter = document.getElementById('vault-unlocked-count');
+    const unlockedText = document.getElementById('vault-unlocked-text');
     if (!container) return;
 
     const ist = getISTDate();
     const currentMinutes = ist.getHours() * 60 + ist.getMinutes();
 
     let unlockedCount = 0;
-    container.innerHTML = '';
+    nextWishMinutesTarget = null;
 
+    // Find unlocked count & next target
     TIMED_WISHES.forEach((wish) => {
       const wishMinutes = parseTimeToMinutes(wish.time);
-      const isUnlocked = currentMinutes >= wishMinutes;
-
-      if (isUnlocked) unlockedCount++;
-
-      const card = document.createElement('div');
-      card.className = `wish-vault-card ${isUnlocked ? 'is-unlocked' : 'is-locked'}`;
-
-      if (isUnlocked) {
-        card.innerHTML = `
-          <div class="wish-card-header">
-            <span class="wish-sender-badge">${wish.sender !== 'Anonymous' ? '💌 ' + wish.sender : '🎁 Secret Wish'}</span>
-            <span class="wish-time-badge">${wish.time}</span>
-          </div>
-          <p class="wish-message-body">${wish.message.replace(/\n/g, '<br>')}</p>
-        `;
-      } else {
-        card.innerHTML = `
-          <div class="wish-locked-content">
-            <div class="wish-lock-icon">🔒</div>
-            <span class="wish-lock-time">Unlocks at ${wish.time}</span>
-            <p class="wish-lock-hint">A little surprise is waiting for you...</p>
-          </div>
-        `;
+      if (currentMinutes >= wishMinutes) {
+        unlockedCount++;
+      } else if (nextWishMinutesTarget === null) {
+        nextWishMinutesTarget = wishMinutes;
       }
-
-      container.appendChild(card);
     });
 
-    if (unlockedCounter) {
-      unlockedCounter.textContent = `${unlockedCount} of ${TIMED_WISHES.length} Unlocked`;
+    if (unlockedText) {
+      unlockedText.textContent = `${unlockedCount} of ${TIMED_WISHES.length} Unlocked`;
     }
+
+    // Only rebuild DOM grid when a new card unlocks
+    if (unlockedCount !== lastUnlockedCount) {
+      lastUnlockedCount = unlockedCount;
+      container.innerHTML = '';
+
+      TIMED_WISHES.forEach((wish) => {
+        const wishMinutes = parseTimeToMinutes(wish.time);
+        const isUnlocked = currentMinutes >= wishMinutes;
+
+        const card = document.createElement('div');
+        card.className = `wish-vault-card ${isUnlocked ? 'is-unlocked' : 'is-locked'}`;
+
+        if (isUnlocked) {
+          card.innerHTML = `
+            <div class="wish-card-header">
+              <span class="wish-sender-badge">${wish.sender !== 'Anonymous' ? '💌 ' + wish.sender : '🎁 Secret Wish'}</span>
+              <span class="wish-time-badge">${wish.time}</span>
+            </div>
+            <p class="wish-message-body">${wish.message.replace(/\n/g, '<br>')}</p>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="wish-locked-content">
+              <div class="wish-lock-icon">🔒</div>
+              <span class="wish-lock-time">Unlocks at ${wish.time}</span>
+              <p class="wish-lock-hint">A little surprise is waiting for you...</p>
+            </div>
+          `;
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    updateCountdown();
   }
 
-  // Run on load and check every minute
+  function updateCountdown() {
+    const clockEl = document.getElementById('vault-countdown-clock');
+    const timerContainer = document.getElementById('vault-next-timer');
+    if (!clockEl) return;
+
+    if (nextWishMinutesTarget === null) {
+      if (timerContainer) {
+        timerContainer.innerHTML = '<span>🎉 All 33 wishes unlocked!</span>';
+      }
+      return;
+    }
+
+    const ist = getISTDate();
+    const currentSecondsTotal = ist.getHours() * 3600 + ist.getMinutes() * 60 + ist.getSeconds();
+    const targetSecondsTotal = nextWishMinutesTarget * 60;
+
+    let diffSeconds = targetSecondsTotal - currentSecondsTotal;
+
+    if (diffSeconds <= 0) {
+      renderVault(); // Unlock!
+      return;
+    }
+
+    const mins = Math.floor(diffSeconds / 60);
+    const secs = diffSeconds % 60;
+
+    const formattedMins = String(mins).padStart(2, '0');
+    const formattedSecs = String(secs).padStart(2, '0');
+
+    clockEl.textContent = `${formattedMins}m ${formattedSecs}s`;
+  }
+
+  // Setup on load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       renderVault();
-      setInterval(renderVault, 60000);
+      setInterval(updateCountdown, 1000);
+      setInterval(renderVault, 30000);
     });
   } else {
     renderVault();
-    setInterval(renderVault, 60000);
+    setInterval(updateCountdown, 1000);
+    setInterval(renderVault, 30000);
   }
 })();

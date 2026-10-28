@@ -499,9 +499,14 @@
         <p class="text-slate-300 text-sm max-w-xl mx-auto mt-3">
             Special birthday wishes unlock one by one throughout your day! Check back every 30 minutes to uncover new messages from those who adore you. 💙
         </p>
-        <div class="mt-4">
-            <span id="vault-unlocked-count" class="inline-block px-4 py-1.5 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-300 text-xs font-bold uppercase tracking-wider">
-                Loading surprises...
+        <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <span id="vault-unlocked-count" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-200 text-xs font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(56,189,248,0.2)]">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span id="vault-unlocked-text">Loading surprises...</span>
+            </span>
+            <span id="vault-next-timer" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/15 border border-indigo-400/35 text-indigo-200 text-xs font-bold tracking-wide shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                <span>⏳ Next wish in:</span>
+                <span id="vault-countdown-clock" class="text-amber-300 font-mono text-sm font-black">--:--</span>
             </span>
         </div>
 
