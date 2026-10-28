@@ -74,8 +74,8 @@ const BIRTHDAY_MESSAGES = [
   },
   // 9 — Anonymous
   {
-    message: "Birthday reminder, Aswini: Today is your special day! Enjoy every moment! 🎉❤️",
-    sender: "Anonymous"
+    message: "Happy Birthday to my favourite human everrr! 🥹❤️🫂 Life is so much more beautiful with you in it, and I hope this world gives you all the happiness and love you deserve. No matter where life takes us, you'll always have me. Love you endlessly, chunnniiiii 🧿❤️✨",
+    sender: "Adru"
   },
   // 10 — Arise
   {
@@ -244,8 +244,8 @@ async function run() {
   const item = BIRTHDAY_MESSAGES[nextIndex];
 
   // Notification title reflects sender if not anonymous
-  const notifTitle = item.sender && item.sender !== 'Anonymous' 
-    ? `🎂 Birthday Wish from ${item.sender} ✨` 
+  const notifTitle = item.sender && item.sender !== 'Anonymous'
+    ? `🎂 Birthday Wish from ${item.sender} ✨`
     : `🎂 Birthday Surprise ✨`;
 
   console.log(`✉️ Sending message #${nextIndex + 1} (${item.sender}): "${item.message.slice(0, 50)}..."`);
@@ -279,8 +279,8 @@ async function run() {
   response.responses.forEach((resp, idx) => {
     if (!resp.success) {
       const errCode = resp.error?.code;
-      if (errCode === 'messaging/invalid-registration-token' || 
-          errCode === 'messaging/registration-token-not-registered') {
+      if (errCode === 'messaging/invalid-registration-token' ||
+        errCode === 'messaging/registration-token-not-registered') {
         tokensToRemove.push(tokens[idx]);
       }
     }
