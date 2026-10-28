@@ -171,58 +171,65 @@
   async function triggerBotPermission() {
     log('Permission flow started (user-initiated).');
 
-    if (!isSupported()) {
-      alert('Your browser doesn\'t support push notifications.\nTry Chrome or Edge on Android/desktop.');
+    if (!('Notification' in window)) {
+      alert('This device or browser does not support Web Push Notifications.\nPlease open this site on Google Chrome on Android or a laptop.');
       return;
     }
 
-    // Already denied by user previously
+    if (!('serviceWorker' in navigator)) {
+      alert('Service Worker is not supported on this browser.');
+      return;
+    }
+
+    // If permission was previously denied
     if (Notification.permission === 'denied') {
+      alert('Notifications are blocked in your browser settings. Please click the tune/lock icon in the URL bar and allow notifications.');
       setUI('blocked');
-      log('Permission was previously denied.');
       return;
     }
 
-    // Already granted — just refresh token
-    if (Notification.permission === 'granted') {
-      setUI('loading');
-      const token = await getFCMToken();
-      if (token) {
-        await saveToken(token);
-        setUI('success');
-        if (typeof window.onBotSubscribed === 'function') window.onBotSubscribed(token);
-      } else {
-        setUI('invite'); // Let them try again
-      }
-      return;
-    }
-
-    // Default — ask permission (native browser dialog)
     setUI('loading');
-    let permission;
+
     try {
-      permission = await Notification.requestPermission();
-    } catch (e) {
-      err('requestPermission() failed:', e.message);
-      setUI('invite');
-      return;
-    }
+      // 1. Request native browser notification permission
+      const permission = await Notification.requestPermission();
+      log('Permission result:', permission);
 
-    log('Permission result:', permission);
+      if (permission !== 'granted') {
+        alert('Notification permission was not granted. Please choose Allow to get birthday surprises!');
+        setUI('invite');
+        return;
+      }
 
-    if (permission === 'granted') {
+      // 2. Ensure Service Worker is registered
+      if (!_swReg) {
+        _swReg = await registerSW();
+      }
+
+      // 3. Ensure Firebase messaging is ready
+      if (!_messaging) {
+        initFirebase();
+      }
+
+      // 4. Retrieve FCM Token
       const token = await getFCMToken();
       if (token) {
-        await saveToken(token);
-        setUI('success');
-        if (typeof window.onBotSubscribed === 'function') window.onBotSubscribed(token);
-        log('🎉 Subscription complete! Bot is active.');
+        const saved = await saveToken(token);
+        if (saved) {
+          setUI('success');
+          alert('🎉 Awesome! You have unlocked your birthday surprises! Wishes will reach your device throughout the day. 💙✨');
+        } else {
+          setUI('success');
+          log('Token saved locally.');
+        }
       } else {
-        warn('Permission granted but token could not be retrieved.');
+        alert('Could not generate push token. Please check network connection and try again.');
         setUI('invite');
       }
-    } else {
-      setUI('blocked');
+    } catch (e) {
+      err('Error during triggerBotPermission:', e);
+      alert('Error requesting permission: ' + e.message);
+      setUI('invite');
     }
   }
 
